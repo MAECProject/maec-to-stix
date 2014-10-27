@@ -12,7 +12,7 @@ The MAEC to STIX Utility has the following dependencies:
 The MAEC to STIX Utility can be used to wrap a MAEC Package in STIX. 
 Specifically, the utility takes as input a MAEC Package XML file,
 and outputs a STIX Package XML file with the MAEC Package wrapped
-as a STIX TTP.
+inside of a STIX TTP (via Behavior/Malware/Malware_Instance).
 
 There are two positional command-line parameters:
 * input : the name of the input MAEC Package XML file to wrap
