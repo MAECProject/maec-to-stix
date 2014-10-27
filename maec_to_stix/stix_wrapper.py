@@ -9,7 +9,7 @@ from stix.extensions.malware.maec_4_1_malware import MAECInstance
 from cybox.common import ToolInformation, ToolInformationList
 from lxml import etree
 
-def wrap_maec(input_maec):
+def wrap_maec(input_maec, version):
     '''Wrap a MAEC Package in a STIX TTP/Package.
        Return the newly created STIX Package.'''
 
@@ -40,7 +40,7 @@ def wrap_maec(input_maec):
     tool_info = ToolInformation()
     stix_header.information_source = InformationSource()
     tool_info.name = "MAEC to STIX"
-    tool_info.version = str(__version__)
+    tool_info.version = str(version)
     stix_header.information_source.tools = ToolInformationList(tool_info)
     stix_package.stix_header = stix_header
     
