@@ -19,7 +19,7 @@ There are two positional command-line parameters:
 * output : the name of the output STIX Package XML to write to
 
 Example usage:
-`maec_to_stix.py maec_package_file.xml stix_package_xml.file```
+`maec_to_stix.py maec_package_file.xml stix_package_xml.file`
 
 ## Terms
 BY USING THE MAEC TO STIX UTILITY, YOU SIGNIFY YOUR ACCEPTANCE OF THE 
