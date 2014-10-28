@@ -21,7 +21,7 @@ def wrap_maec(input_maec, version):
 
     # Create the STIX MAEC Instance
     maec_malware_instance = MAECInstance()
-    maec_malware_instance.maec = etree.fromstring(maec_package.to_xml(), parser=etree.ETCompatXMLParser())
+    maec_malware_instance.maec = maec_package
     
     # Create the STIX TTP that includes the MAEC Instance
     ttp = TTP()
