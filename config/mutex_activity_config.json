@@ -1,0 +1,33 @@
+{"supported actions": 
+	{"SynchronizationActionNameEnum-1.0":
+	{
+		"create mutex":true,
+		"delete mutex":false,
+		"open mutex":false,
+		"release mutex":false,
+		"create semaphore":false,
+		"delete semaphore":false,
+		"open semaphore":false,
+		"release semaphore":false,
+		"create event":false,
+		"delete event":false,
+		"open event":false,
+		"reset event":false,
+		"create critical section":false,
+		"delete critical section":false,
+		"open critical section":false,
+		"release critical section":false
+	}}, 
+  "supported objects": 
+   {"MutexObjectType":
+	{
+		"name":true
+	},
+	"WindowsMutexObjectType": {"handle": {"access_mask":false,
+										   "id":false,
+										   "name":false,
+										   "object_address":false,
+										   "pointer_count":false,
+										   "type":false},
+								"name":true,
+								"security_attributes":false}}}
