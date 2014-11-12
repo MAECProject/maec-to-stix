@@ -6,6 +6,7 @@ import os
 import collections
 import maec
 from maec.bundle.bundle import Bundle, ObjectList
+from maec.bundle.object_history import ObjectHistory
 import cybox.utils
 from cybox.core import Object
 from cybox.common import (ObjectProperties, ToolInformation, 
@@ -23,8 +24,8 @@ class IndicatorExtractor(object):
         self.config = config
         # Tool version
         self.version = version
-        # Dictionary of candidate Objects to be converted into Indicators
-        self.candidate_indicator_objects = {}
+        # List of candidate Objects to be converted into Indicators
+        self.candidate_indicator_objects = []
         # List of final Objects to be converted into Indicators
         self.final_indicator_objects = []
         # List of supported Actions
@@ -39,7 +40,7 @@ class IndicatorExtractor(object):
         self.parse_config()
         # Parse the MAEC Package
         self.parse_package()
-        # Prune and deduplicate the initial candidate Indicator Objects
+        # Prune, check for contraindicators, and deduplicate the initial candidate Indicator Objects
         self.prune_objects()
         # Prepare the Objects for Indicator conversion
         self.prepare_objects()
@@ -106,6 +107,39 @@ class IndicatorExtractor(object):
             updated_properties_dict['xsi:type'] = object_xsi_type
             object.properties = ObjectProperties.from_dict(updated_properties_dict)
 
+    def contraindicator_check(self, object_history_entry):
+        """Check an Object for Action-based contraindicators that may render it
+           useless for detection. E.g., that the Object was created and later deleted."""
+        # A list of action terms that indicate that the Object may no longer 
+        # be present after the execution of the malware
+        # E.g. that a particular file may be deleted
+        contraindicators = ["delete", "kill"]
+        # A list of action terms that indicate that the state of the Object
+        # may have been changed in some way that would redner it undetectable. 
+        # Primarily applicable to files (?).
+        modifiers = ["move", "copy", "rename"]
+        object_id = object_history_entry.object.id_
+        # Get the context with regards to the Actions that operated on the Object
+        action_context = object_history_entry.get_action_context()
+        contraindication = False
+        for context_entry in action_context:
+            if contraindication:
+                break
+            action_name = context_entry[0]
+            association_type = context_entry[1]
+            # Check for the contraindicators and modifiers
+            if action_name and association_type:
+                for contraind in contraindicators:
+                    if contraind in action_name:
+                        contraindication = True
+                        break
+                for modifier in modifiers:
+                    if modifier in action_name and association_type == "input":
+                        contraindication = True
+                        break
+        # Return the contraindication
+        return contraindication
+
     def prune_object_properties(self, object_dict, supported_properties, parent_key = None):
         """Prune any un-wanted properties from a single Object.
            Return a dictionary with only the allowed properties."""
@@ -164,8 +198,11 @@ class IndicatorExtractor(object):
         """Prune any un-wanted properties from the Candidate Indicator Objects.
            Also, deduplicate any identical Objects."""
         # Prune any unwanted properties from Objects
-        for action_name, object_list in self.candidate_indicator_objects.items():
-            for object in object_list:
+        for entry in self.candidate_indicator_objects:
+            object = entry.object
+            # Do the contraindicator check
+            if not self.contraindicator_check(entry):
+                # Prune the properties of the Object to correspond to the input config file
                 xsi_type = object.properties._XSI_TYPE
                 pruned_properties = self.prune_object_properties(object.properties.to_dict(), self.supported_objects[xsi_type])
                 if pruned_properties:
@@ -207,8 +244,11 @@ class IndicatorExtractor(object):
 
     def parse_granular_config(self, granular_config_file):
         """Parse a granular JSON configuration structure."""
-        with open(os.path.join("config",granular_config_file), mode='r') as f:
-            config = json.loads(f.read())
+        try:
+            with open(os.path.join("config",granular_config_file), mode='r') as f:
+                config = json.loads(f.read())
+        except EnvironmentError:
+            pass
         for config_type, config_values in config.items():
             if config_type == "supported objects":
                 for object_type, properties_dict in config_values.items():
@@ -218,7 +258,6 @@ class IndicatorExtractor(object):
                     for action_name, enabled in actions_dict.items():
                         if enabled:
                             self.supported_actions.append(action_name)
-        print self.supported_objects
 
     def parse_config(self):
         """Parse and break up the JSON configuration structure."""
@@ -242,7 +281,6 @@ class IndicatorExtractor(object):
                     self.parse_granular_config("network_activity_config.json")
                 elif option == "driver_activity" and enabled:
                     self.parse_granular_config("driver_activity_config.json")
-        #print self.supported_objects    
 
     def parse_package(self):
         """Parse and extract Indicators from a MAEC Package"""
@@ -251,30 +289,32 @@ class IndicatorExtractor(object):
             for malware_subject in maec_package.malware_subjects:
                 self.parse_malware_subject(malware_subject)
 
-    def parse_action(self, action, action_name):
-        """Parse and extract Indicators from a MAEC Malware Action"""
-        if action.associated_objects:
-            for associated_object in action.associated_objects:
-                if associated_object.properties:
-                    object_xsi_type = associated_object.properties._XSI_TYPE
-                    properties_dict = associated_object.properties.to_dict()
-                    if object_xsi_type in self.supported_objects:
-                        for property in properties_dict:
-                            if property in self.supported_objects[object_xsi_type]:
-                                self.candidate_indicator_objects[action_name].append(associated_object)
-                                break
+    def parse_object_history(self, object_history):
+        """Parse the Object History to build the list of
+           candidate Objects for use in Indicators."""
+        for entry in object_history.entries:
+            object_id = entry.object.id_
+            # Get the context with regards to the Actions that operated on the Object
+            action_context = entry.get_action_context()
+            action_match = False
+            # First, test if one of the supported Actions operated on the Object
+            for context_entry in action_context:
+                if context_entry[0] in self.supported_actions:
+                    action_match = True
+                    break
+            # If a supported Action was found, add the Object to the list of candidates
+            if action_match:
+                self.candidate_indicator_objects.append(entry)
 
     def parse_bundle(self, bundle, mal_inst_obj):
         """Parse and extract Indicators from a MAEC Bundle"""
-        # Dereference the Objects in the Bundle to make it easier to parse
-        bundle.dereference_objects(extra_objects=[mal_inst_obj])
-        binned_actions = bundle.get_all_actions(bin=True)
-        for action_name, actions in binned_actions.items():
-            if action_name in self.supported_actions:
-                if action_name not in self.candidate_indicator_objects:
-                    self.candidate_indicator_objects[action_name] = []
-                for action in actions:
-                    self.parse_action(action, action_name)
+        # Deduplicate the Objects in the Bundle
+        bundle.deduplicate()
+        # Build the Object history for the Bundle
+        object_history = ObjectHistory()
+        object_history.build(bundle)
+        # Parse the object history to build the list of candidate Objects
+        self.parse_object_history(object_history)
 
     def parse_malware_subject(self, malware_subject):
         """Parse and extract Indicators from a Malware Subject"""
