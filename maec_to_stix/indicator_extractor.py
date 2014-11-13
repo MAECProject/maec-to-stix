@@ -145,17 +145,12 @@ class IndicatorExtractor(object):
            Return a dictionary with only the allowed properties."""
         pruned_dict = {}
         for property_name, property_value in object_dict.items():
-            # Keep any xsi:type values
-            if property_name == "xsi:type":
-                pruned_dict["xsi:type"] = property_value
-                continue
             if parent_key:
                 updated_key = parent_key + "/" + property_name
             else:
                 updated_key = property_name
-            # Test if the value is a string
-            # All paths lead to Rome (or strings)  
-            if isinstance(property_value, basestring):
+            # Test if the value is a string or a number
+            if isinstance(property_value, basestring) or hasattr(property_value, "__int__"):
                 if not parent_key and property_name in supported_properties:
                     pruned_dict[property_name] = property_value
                 elif parent_key:
