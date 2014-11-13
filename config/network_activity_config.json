@@ -1,7 +1,7 @@
 {"supported actions": 
 	{"NetworkActionNameEnum-1.1":
 	{
-		"open port":true,
+		"open port":false,
 		"close port":false,
 		"connect to ip":true,
 		"disconnect from ip":false,
@@ -9,7 +9,7 @@
 		"connect to socket address":true,
 		"download file":true,
 		"upload file":false,
-		"listen on port":true,
+		"listen on port":false,
 		"send email message":true,
 		"send icmp request":true,
 		"send network packet":false,
@@ -267,7 +267,6 @@
 								   "port": {"layer4_protocol":false,
 											"port_value":false}},
 		 "source_tcp_state":false},
-	 "PortObjectType": {"layer4_protocol":false, "port_value":true},
 	 "SocketAddressObjectType": {"hostname": {"hostname_value":true,
 											  "naming_system":false},
 								 "ip_address": {"address_value":true,
