@@ -115,7 +115,7 @@ class IndicatorExtractor(object):
         # E.g. that a particular file may be deleted
         contraindicators = ["delete", "kill"]
         # A list of action terms that indicate that the state of the Object
-        # may have been changed in some way that would redner it undetectable. 
+        # may have been changed in some way that would render it undetectable. 
         # Primarily applicable to files (?).
         modifiers = ["move", "copy", "rename"]
         object_id = object_history_entry.object.id_
@@ -137,7 +137,7 @@ class IndicatorExtractor(object):
                     if modifier in action_name and association_type == "input":
                         contraindication = True
                         break
-        # Return the contraindication
+        # Return the contraindication value
         return contraindication
 
     def prune_object_properties(self, object_dict, supported_properties, parent_key = None):
