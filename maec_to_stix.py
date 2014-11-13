@@ -15,7 +15,7 @@
 # MAEC to STIX Converter Script
 # Copyright 2014, MITRE Corp
 # v0.10 - BETA
-# Updated 10/31/2014
+# Updated 11/12/2014
 
 import sys
 import os
@@ -26,6 +26,13 @@ from maec_to_stix.stix_wrapper import wrap_maec
 from maec_to_stix.indicator_extractor import IndicatorExtractor
 
 __version__ = 0.10
+
+def write_stix_package(stix_package, output_file):
+    """Write a STIX Package to an XML file."""
+    out_file = open(output_file, "w")
+    out_file.write(stix_package.to_xml())
+    out_file.flush()
+    out_file.close()
 
 def main():
     # Setup the argument parser
@@ -40,19 +47,19 @@ def main():
     # Wrap the MAEC document in a STIX Package
     if args.wrap:
         stix_package = wrap_maec(args.input, __version__)
+        write_stix_package(stix_package, args.output)
     # Attempt to extract Indicators from the MAEC document
-    if args.extract:
+    elif args.extract:
         # Parse and load the JSON config structure
-        with open('extractor_config.json', mode='r') as f:
-            extractor_config = json.loads(f.read())
+        try:
+            with open('extractor_config.json', mode='r') as f:
+                extractor_config = json.loads(f.read())
+        except EnvironmentError:
+            pass
         extractor = IndicatorExtractor(args.input, extractor_config, __version__)
         stix_package = extractor.create_stix()
+        write_stix_package(stix_package, args.output)
 
-    # Write out the STIX Package to an XML file
-    out_file = open(args.output, "w")
-    out_file.write(stix_package.to_xml())
-    out_file.flush()
-    out_file.close()
 
 
 if __name__ == "__main__":
