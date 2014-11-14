@@ -322,7 +322,7 @@ class IndicatorExtractor(object):
                 candidate_indicator_objects.append(entry)
         return candidate_indicator_objects
 
-    def create_bundle_indicators(self, object_history, malware_subject):
+    def create_bundle_indicators(self, object_history, ttp_id):
         """Create an add Indicators derived from a MAEC Bundle."""
         # Parse the object history to build the list of candidate Objects
         candidate_indicator_objects = self.parse_object_history(object_history)
@@ -330,15 +330,10 @@ class IndicatorExtractor(object):
         pruned_indicator_objects = self.prune_objects(candidate_indicator_objects)
         # Prepare the candidate objects for Indicatorization (TM)
         self.prepare_objects(pruned_indicator_objects)
-        # Create the STIX Package if it does not exist yet
-        if not self.stix_package:
-            self.stix_package = self.create_stix_package()
-        # Create and add the STIX TTP for the Malware Subject
-        ttp = self.add_stix_ttp(malware_subject)
         # Create and add the STIX Indicators for each of the final candidate indicator Objects
-        self.add_stix_indicators(pruned_indicator_objects, ttp)
+        self.add_stix_indicators(pruned_indicator_objects, ttp_id)
 
-    def parse_bundle(self, bundle, malware_subject):
+    def parse_bundle(self, bundle, ttp_id):
         """Parse a MAEC Bundle."""
         # Deduplicate the Objects in the Bundle
         bundle.deduplicate()
@@ -346,11 +341,16 @@ class IndicatorExtractor(object):
         object_history = ObjectHistory()
         object_history.build(bundle)
         # Create the actual Indicators derived from the Bundle
-        self.create_bundle_indicators(object_history, malware_subject)
+        self.create_bundle_indicators(object_history, ttp_id)
 
     def parse_malware_subject(self, malware_subject):
         """Parse a MAEC Malware Subject."""
         # Parse the Findings Bundles in the Malware Subject
         if malware_subject.findings_bundles and malware_subject.findings_bundles.bundle:
+            # Create the STIX Package if it does not exist yet
+            if not self.stix_package:
+                self.stix_package = self.create_stix_package()
+            # Create and add the STIX TTP for the Malware Subject
+            ttp_id = self.add_stix_ttp(malware_subject)
             for bundle in malware_subject.findings_bundles.bundle:
-                self.parse_bundle(bundle, malware_subject)
+                self.parse_bundle(bundle, ttp_id)
