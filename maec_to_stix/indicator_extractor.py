@@ -72,10 +72,10 @@ class IndicatorExtractor(object):
             indicator.add_indicator_type("Malware Artifacts")
             indicator.add_observable(object.properties)
             # Add the Action-derived description to the Indicator
-            description = "Corresponding Action(s):  "
+            description = "Corresponding Action(s): "
             for action_name in entry.get_action_names():
-                description += (action_name + ",")
-            indicator.description = description[:-1]
+                description += (action_name + ", ")
+            indicator.description = description[:-2]
             # Set the proper Confidence on the Indicator
             confidence = Confidence()
             confidence.value = "Low"
