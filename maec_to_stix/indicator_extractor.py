@@ -80,14 +80,10 @@ class IndicatorExtractor(object):
 
     def set_object_property(self, property, condition = "Equals"):
         """Add a condition to an Object property and all of its children."""
-        if isinstance(property, str):
+        if isinstance(property, basestring) or hasattr(property, "__int__"):
             property = {'value':property, 'condition':condition}
         elif isinstance(property, dict):
-            # Test if we're dealing with a "value" dictionary
-            # or a data structure dictionary
-            if 'value' in property:
-                property['condition'] = condition
-            else:
+            if 'condition' not in property:
                 for key, value in property.items():
                     property[key] = self.set_object_property(value, condition)
         elif isinstance(property, list):
@@ -104,6 +100,8 @@ class IndicatorExtractor(object):
             updated_properties_dict = {}
             for property_name, property_value in object_properties_dict.items():
                 updated_properties_dict[property_name] = self.set_object_property(property_value)
+                if object_xsi_type == "HTTPSessionObjectType":
+                    print property_name, self.set_object_property(property_value)
             updated_properties_dict['xsi:type'] = object_xsi_type
             object.properties = ObjectProperties.from_dict(updated_properties_dict)
 
@@ -195,10 +193,10 @@ class IndicatorExtractor(object):
         # Prune any unwanted properties from Objects
         for entry in self.candidate_indicator_objects:
             object = entry.object
+            xsi_type = object.properties._XSI_TYPE
             # Do the contraindicator check
-            if not self.contraindicator_check(entry):
+            if xsi_type in self.supported_objects and not self.contraindicator_check(entry):
                 # Prune the properties of the Object to correspond to the input config file
-                xsi_type = object.properties._XSI_TYPE
                 pruned_properties = self.prune_object_properties(object.properties.to_dict(), self.supported_objects[xsi_type])
                 if pruned_properties:
                     pruned_properties["xsi:type"] = xsi_type
