@@ -15,19 +15,19 @@ import stix.utils
 from stix.core import STIXHeader, STIXPackage
 from stix.common import Confidence, InformationSource
 from stix.indicator import Indicator
+from stix.ttp import TTP, Behavior
+from stix.ttp.malware_instance import MalwareInstance
 
 class IndicatorExtractor(object):
     def __init__(self, input_file, config, version):
         # The input MAEC Package file
         self.input_file = input_file
+        # The output STIX Package (with Indicators)
+        self.stix_package = None
         # JSON configuration blob
         self.config = config
         # Tool version
         self.version = version
-        # List of candidate Objects to be converted into Indicators
-        self.candidate_indicator_objects = []
-        # List of final Objects to be converted into Indicators
-        self.final_indicator_objects = []
         # List of supported Actions
         self.supported_actions = []
         # Dictionary of supported Objects and their properties
@@ -38,28 +38,59 @@ class IndicatorExtractor(object):
         cybox.utils.set_id_namespace(cybox.utils.Namespace('https://github.com/MAECProject/maec-to-stix' , 'maecToSTIX'))
         # Parse the config structure
         self.parse_config()
-        # Parse the MAEC Package
+        # Parse the MAEC Package 
         self.parse_package()
-        # Prune, check for contraindicators, and deduplicate the initial candidate Indicator Objects
-        self.prune_objects()
-        # Prepare the Objects for Indicator conversion
-        self.prepare_objects()
 
+    def add_stix_ttp(self, malware_subject):
+        """Create and add a STIX TTP for a MAEC Malware Subject."""
+        # Create the STIX TTP that includes the MAEC Instance
+        ttp = TTP()
+        ttp.behavior = Behavior()
+        malware_instance = MalwareInstance()
+        # Add a basic description to the Malware Instance
+        # For identifying the malware subject that it corresponds to
+        description = "Malware binary with hashes of "
+        mal_inst_obj = malware_subject.malware_instance_object_attributes
+        obj_properties = mal_inst_obj.properties
+        if obj_properties and obj_properties.hashes:
+            for hash in obj_properties.hashes:
+                if hash.type_ and hash.simple_hash_value:
+                    # Get the hash type
+                    hash_type = str(hash.type_)
+                    # Get the hash value
+                    hash_value = str(hash.simple_hash_value).lower()
+                    description += str("{0} : {1}, ").format(hash_type, hash_value)
+        malware_instance.description = description[:-2]
+        ttp.behavior.add_malware_instance(malware_instance)
+        self.stix_package.add_ttp(ttp)
+        return ttp.id_
 
-    def create_stix_indicator(self, object):
-        """Create and return a STIX Indicator for a single input Object."""
-        indicator = Indicator()
-        indicator.title = "Malware Artifact Extracted from MAEC Document"
-        indicator.add_indicator_type("Malware Artifacts")
-        indicator.add_observable(object.properties)
-        # Set the proper Confidence on the Indicator
-        confidence = Confidence()
-        confidence.value = "Low"
-        confidence.description = "Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage."
-        indicator.confidence = confidence
-        return indicator
+    def add_stix_indicators(self, final_indicator_objects, ttp_id):
+        """Create and add STIX Indicators for a list of Object History entries.
+           Link each Indicator to their Indicated TTP."""
+        for entry in final_indicator_objects:
+            object = entry.object
+            indicator = Indicator()
+            indicator.title = "Malware Artifact Extracted from MAEC Document"
+            indicator.add_indicator_type("Malware Artifacts")
+            indicator.add_observable(object.properties)
+            # Add the Action-derived description to the Indicator
+            description = "Corresponding Action(s):  "
+            for action_name in entry.get_action_names():
+                description += (action_name + ",")
+            indicator.description = description[:-1]
+            # Set the proper Confidence on the Indicator
+            confidence = Confidence()
+            confidence.value = "Low"
+            confidence.description = "Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage."
+            indicator.confidence = confidence
+            # Link the Indicator to its Indicated TTP
+            ttp = TTP(idref=ttp_id)
+            indicator.add_indicated_ttp(ttp)
+            # Add the Indicator to the STIX Package
+            self.stix_package.add_indicator(indicator)
         
-    def create_stix(self):
+    def create_stix_package(self):
         """Create and return a STIX Package with the final Indicator Objects."""
         stix_package = STIXPackage()
         stix_header = STIXHeader()
@@ -72,10 +103,6 @@ class IndicatorExtractor(object):
         tool_info.version = str(self.version)
         stix_header.information_source.tools = ToolInformationList(tool_info)
         stix_package.stix_header = stix_header
-        # Create and add a STIX Indicator for each Object
-        for object in self.final_indicator_objects:
-            indicator = self.create_stix_indicator(object)
-            stix_package.add_indicator(indicator)
         return stix_package
 
     def set_object_property(self, property, condition = "Equals"):
@@ -91,17 +118,16 @@ class IndicatorExtractor(object):
                 self.set_object_property(item, condition)
         return property
 
-    def prepare_objects(self):
+    def prepare_objects(self, final_indicator_objects):
         """Prepare the final Indicator Objects for translation into STIX Indicators.
            Set their condition attributes as appropriate."""
-        for object in self.final_indicator_objects:
+        for entry in final_indicator_objects:
+            object = entry.object
             object_xsi_type = object.properties._XSI_TYPE
             object_properties_dict = object.properties.to_dict()
             updated_properties_dict = {}
             for property_name, property_value in object_properties_dict.items():
                 updated_properties_dict[property_name] = self.set_object_property(property_value)
-                if object_xsi_type == "HTTPSessionObjectType":
-                    print property_name, self.set_object_property(property_value)
             updated_properties_dict['xsi:type'] = object_xsi_type
             object.properties = ObjectProperties.from_dict(updated_properties_dict)
 
@@ -187,11 +213,12 @@ class IndicatorExtractor(object):
                     pruned_dict[property_name] = pruned_list
         return pruned_dict
 
-    def prune_objects(self):
+    def prune_objects(self, candidate_indicator_objects):
         """Prune any un-wanted properties from the Candidate Indicator Objects.
            Also, deduplicate any identical Objects."""
+        final_indicator_objects = []
         # Prune any unwanted properties from Objects
-        for entry in self.candidate_indicator_objects:
+        for entry in candidate_indicator_objects:
             object = entry.object
             xsi_type = object.properties._XSI_TYPE
             # Do the contraindicator check
@@ -203,13 +230,10 @@ class IndicatorExtractor(object):
                     # Create a new Object with the pruned ObjectProperties
                     pruned_object = Object()
                     pruned_object.properties = ObjectProperties.from_dict(pruned_properties)
-                    # Add the new Object to the final list of Indicators
-                    self.final_indicator_objects.append(pruned_object)
-        # Deduplicate any identical Objects
-        temp_bundle = Bundle()
-        temp_bundle.objects = ObjectList(self.final_indicator_objects)
-        temp_bundle.deduplicate()
-        self.final_indicator_objects = temp_bundle.get_all_objects()
+                    entry.object = pruned_object
+                    # Add the updated Object History entry to the final list of Indicators
+                    final_indicator_objects.append(entry)
+        return final_indicator_objects
 
     def flatten_dict(self, d, parent_key='', sep='/'):
         """Flatten an input dictionary."""
@@ -276,7 +300,7 @@ class IndicatorExtractor(object):
                     self.parse_granular_config("driver_activity_config.json")
 
     def parse_package(self):
-        """Parse and extract Indicators from a MAEC Package"""
+        """Parse a MAEC Package."""
         maec_package = maec.parse_xml_instance(self.input_file)['api']
         if maec_package.malware_subjects:
             for malware_subject in maec_package.malware_subjects:
@@ -285,6 +309,7 @@ class IndicatorExtractor(object):
     def parse_object_history(self, object_history):
         """Parse the Object History to build the list of
            candidate Objects for use in Indicators."""
+        candidate_indicator_objects = []
         for entry in object_history.entries:
             object_id = entry.object.id_
             # Get the context with regards to the Actions that operated on the Object
@@ -297,21 +322,38 @@ class IndicatorExtractor(object):
                     break
             # If a supported Action was found, add the Object to the list of candidates
             if action_match:
-                self.candidate_indicator_objects.append(entry)
+                candidate_indicator_objects.append(entry)
+        return candidate_indicator_objects
 
-    def parse_bundle(self, bundle, mal_inst_obj):
-        """Parse and extract Indicators from a MAEC Bundle"""
+    def create_bundle_indicators(self, object_history, malware_subject):
+        """Create an add Indicators derived from a MAEC Bundle."""
+        # Parse the object history to build the list of candidate Objects
+        candidate_indicator_objects = self.parse_object_history(object_history)
+        # Prune the candidate objects
+        pruned_indicator_objects = self.prune_objects(candidate_indicator_objects)
+        # Prepare the candidate objects for Indicatorization (TM)
+        self.prepare_objects(pruned_indicator_objects)
+        # Create the STIX Package if it does not exist yet
+        if not self.stix_package:
+            self.stix_package = self.create_stix_package()
+        # Create and add the STIX TTP for the Malware Subject
+        ttp = self.add_stix_ttp(malware_subject)
+        # Create and add the STIX Indicators for each of the final candidate indicator Objects
+        self.add_stix_indicators(pruned_indicator_objects, ttp)
+
+    def parse_bundle(self, bundle, malware_subject):
+        """Parse a MAEC Bundle."""
         # Deduplicate the Objects in the Bundle
         bundle.deduplicate()
         # Build the Object history for the Bundle
         object_history = ObjectHistory()
         object_history.build(bundle)
-        # Parse the object history to build the list of candidate Objects
-        self.parse_object_history(object_history)
+        # Create the actual Indicators derived from the Bundle
+        self.create_bundle_indicators(object_history, malware_subject)
 
     def parse_malware_subject(self, malware_subject):
-        """Parse and extract Indicators from a Malware Subject"""
+        """Parse a MAEC Malware Subject."""
         # Parse the Findings Bundles in the Malware Subject
         if malware_subject.findings_bundles and malware_subject.findings_bundles.bundle:
             for bundle in malware_subject.findings_bundles.bundle:
-                self.parse_bundle(bundle, malware_subject.malware_instance_object_attributes)
+                self.parse_bundle(bundle, malware_subject)
