@@ -57,8 +57,7 @@ def main():
         except EnvironmentError:
             pass
         extractor = IndicatorExtractor(args.input, extractor_config, __version__)
-        stix_package = extractor.create_stix()
-        write_stix_package(stix_package, args.output)
+        write_stix_package(extractor.stix_package, args.output)
 
 
 
