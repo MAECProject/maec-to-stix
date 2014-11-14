@@ -5,6 +5,8 @@ import json
 import os
 import collections
 import maec
+from maec.package.package import Package
+from maec.package.malware_subject import MalwareSubject
 from maec.bundle.bundle import Bundle, ObjectList
 from maec.bundle.object_history import ObjectHistory
 import cybox.utils
@@ -16,7 +18,7 @@ from stix.core import STIXHeader, STIXPackage
 from stix.common import Confidence, InformationSource
 from stix.indicator import Indicator
 from stix.ttp import TTP, Behavior
-from stix.ttp.malware_instance import MalwareInstance
+from stix.extensions.malware.maec_4_1_malware import MAECInstance
 
 class IndicatorExtractor(object):
     def __init__(self, input_file, config, version):
@@ -36,6 +38,8 @@ class IndicatorExtractor(object):
         stix.utils.set_id_namespace({'https://github.com/MAECProject/maec-to-stix' : 'maecToSTIX'})
         # Set the CybOX namespace and alias
         cybox.utils.set_id_namespace(cybox.utils.Namespace('https://github.com/MAECProject/maec-to-stix' , 'maecToSTIX'))
+        # Set the MAEC namespace and alias
+        maec.utils.set_id_namespace(cybox.utils.Namespace('https://github.com/MAECProject/maec-to-stix' , 'maecToSTIX'))
         # Parse the config structure
         self.parse_config()
         # Parse the MAEC Package 
@@ -46,22 +50,15 @@ class IndicatorExtractor(object):
         # Create the STIX TTP that includes the MAEC Instance
         ttp = TTP()
         ttp.behavior = Behavior()
-        malware_instance = MalwareInstance()
-        # Add a basic description to the Malware Instance
-        # For identifying the malware subject that it corresponds to
-        description = "Malware binary with hashes of "
-        mal_inst_obj = malware_subject.malware_instance_object_attributes
-        obj_properties = mal_inst_obj.properties
-        if obj_properties and obj_properties.hashes:
-            for hash in obj_properties.hashes:
-                if hash.type_ and hash.simple_hash_value:
-                    # Get the hash type
-                    hash_type = str(hash.type_)
-                    # Get the hash value
-                    hash_value = str(hash.simple_hash_value).lower()
-                    description += str("{0} : {1}, ").format(hash_type, hash_value)
-        malware_instance.description = description[:-2]
-        ttp.behavior.add_malware_instance(malware_instance)
+        # Add a MAEC Package with just the Malware Subject
+        # For capturing the identity of the malware binary that the Indicators target
+        maec_package = Package()
+        new_malware_subject = MalwareSubject()
+        new_malware_subject.malware_instance_object_attributes = malware_subject.malware_instance_object_attributes
+        maec_package.add_malware_subject(new_malware_subject)
+        maec_malware_instance = MAECInstance()
+        maec_malware_instance.maec = maec_package
+        ttp.behavior.add_malware_instance(maec_malware_instance)
         self.stix_package.add_ttp(ttp)
         return ttp.id_
 
