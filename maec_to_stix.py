@@ -55,10 +55,12 @@ def main():
             with open('extractor_config.json', mode='r') as f:
                 extractor_config = json.loads(f.read())
         except EnvironmentError:
-            pass
+            print "Error reading extractor configuration file (extractor_config.json)"
+            raise
         extractor = IndicatorExtractor(args.input, extractor_config, __version__)
         write_stix_package(extractor.stix_package, args.output)
-
+    else:
+        print "Error: Unspecified mode. One of wrap (-w) or indicator extract (-e) modes must be specified."
 
 
 if __name__ == "__main__":
