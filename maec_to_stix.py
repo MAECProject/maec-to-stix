@@ -22,6 +22,7 @@ import os
 import traceback
 import argparse
 import json
+import maec
 from maec_to_stix.stix_wrapper import wrap_maec
 from maec_to_stix.indicator_extractor import IndicatorExtractor
 
@@ -44,9 +45,12 @@ def main():
     opts_group.add_argument("--extract", "-e", help="attempt to extract indicators from the MAEC Package file and output them in a new STIX Package.", action="store_true", default=False)
     args = parser.parse_args()
 
+    # Parse the input MAEC Package
+    maec_package = maec.parse_xml_instance(args.input)['api']
+
     # Wrap the MAEC document in a STIX Package
     if args.wrap:
-        stix_package = wrap_maec(args.input, __version__)
+        stix_package = wrap_maec(maec_package, args.input, __version__)
         write_stix_package(stix_package, args.output)
     # Attempt to extract Indicators from the MAEC document
     elif args.extract:
@@ -57,7 +61,7 @@ def main():
         except EnvironmentError:
             print "Error reading extractor configuration file (extractor_config.json)"
             raise
-        extractor = IndicatorExtractor(args.input, extractor_config, __version__)
+        extractor = IndicatorExtractor(maec_package, args.input, extractor_config, __version__)
         write_stix_package(extractor.stix_package, args.output)
     else:
         print "Error: Unspecified mode. One of wrap (-w) or indicator extract (-e) modes must be specified."

@@ -21,11 +21,13 @@ from stix.ttp import TTP, Behavior
 from stix.extensions.malware.maec_4_1_malware import MAECInstance
 
 class IndicatorExtractor(object):
-    def __init__(self, input_file, config, version):
-        # The input MAEC Package file
-        self.input_file = input_file
+    def __init__(self, maec_package, file_name, config, version):
+        # The input MAEC Package
+        self.maec_package = maec_package
         # The output STIX Package (with Indicators)
         self.stix_package = None
+        # The input file name
+        self.file_name = file_name
         # JSON configuration blob
         self.config = config
         # Tool version
@@ -92,7 +94,7 @@ class IndicatorExtractor(object):
         stix_package = STIXPackage()
         stix_header = STIXHeader()
         stix_header.add_package_intent("Indicators - Malware Artifacts")
-        stix_header.title = "STIX Indicators extracted from MAEC file: " + str(self.input_file)
+        stix_header.title = "STIX Indicators extracted from MAEC file: " + str(self.file_name)
         # Add the Information Source to the STIX Header
         tool_info = ToolInformation()
         stix_header.information_source = InformationSource()
@@ -313,7 +315,7 @@ class IndicatorExtractor(object):
             abstracted_options = self.config["abstracted_options"]
             for option, enabled in abstracted_options.items():
                 if option == "file_system_activity" and enabled:
-                    self.parse_granular_config("file_system_activity_config_v2.json")
+                    self.parse_granular_config("file_system_activity_config.json")
                 elif option == "registry_activity" and enabled:
                     self.parse_granular_config("registry_activity_config.json")
                 elif option == "mutex_activity" and enabled:
@@ -329,9 +331,8 @@ class IndicatorExtractor(object):
 
     def parse_package(self):
         """Parse a MAEC Package."""
-        maec_package = maec.parse_xml_instance(self.input_file)['api']
-        if maec_package.malware_subjects:
-            for malware_subject in maec_package.malware_subjects:
+        if self.maec_package.malware_subjects:
+            for malware_subject in self.maec_package.malware_subjects:
                 self.parse_malware_subject(malware_subject)
 
     def parse_object_history(self, object_history):

@@ -9,12 +9,9 @@ from stix.extensions.malware.maec_4_1_malware import MAECInstance
 from cybox.common import ToolInformation, ToolInformationList
 from lxml import etree
 
-def wrap_maec(input_maec, version):
-    '''Wrap a MAEC Package in a STIX TTP/Package.
-       Return the newly created STIX Package.'''
-
-    # Parse the input MAEC Package and get the API object
-    maec_package = maec.parse_xml_instance(input_maec)['api']
+def wrap_maec(maec_package, file_name, version):
+    """Wrap a MAEC Package in a STIX TTP/Package.
+       Return the newly created STIX Package."""
 
     # Set the namespace to be used in the STIX Package
     stix.utils.set_id_namespace({"https://github.com/MAECProject/maec-to-stix":"MAECtoSTIX"})
@@ -34,7 +31,7 @@ def wrap_maec(input_maec, version):
 
     # Create the STIX Header and add it to the Package
     stix_header = STIXHeader()
-    stix_header.title = "STIX TTP wrapper around MAEC file: " + str(input_maec)
+    stix_header.title = "STIX TTP wrapper around MAEC file: " + str(file_name)
     stix_header.add_package_intent("Malware Characterization")
     # Add the Information Source to the STIX Header
     tool_info = ToolInformation()
