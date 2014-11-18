@@ -107,7 +107,7 @@ class IndicatorExtractor(object):
         if isinstance(property, basestring) or hasattr(property, "__int__"):
             property = {'value':property, 'condition':condition}
         elif isinstance(property, dict):
-            if 'condition' not in property:
+            if 'condition' not in property and 'required' not in property:
                 for key, value in property.items():
                     property[key] = self.set_object_property(value, condition)
         elif isinstance(property, list):
@@ -206,9 +206,26 @@ class IndicatorExtractor(object):
                 pruned_list = []
                 for list_item in property_value:
                     pruned_list.append(self.prune_object_properties(list_item, supported_properties, updated_key))
-                if pruned_list:
+                if pruned_list and {} not in pruned_list:
                     pruned_dict[property_name] = pruned_list
         return pruned_dict
+
+    def required_property_check(self, object, object_properties_dict):
+        """Check an Object to make sure it has the specified set of 
+           required properties."""
+        properties_found = True
+        required_properties = object_properties_dict["required"]
+        mutually_exclusive_properties = object_properties_dict["mutually_exclusive_required"]
+        pruned_properties = self.prune_object_properties(object.properties.to_dict(), required_properties)
+        # Check for the required properties
+        if len(self.flatten_dict(pruned_properties).keys()) != len(required_properties):
+            properties_found = False
+        # Check for the mutually exclusive required properties
+        if mutually_exclusive_properties:
+            mutually_exclusive_pruned = self.prune_object_properties(object.properties.to_dict(), mutually_exclusive_properties)
+            if len(mutually_exclusive_pruned.keys()) != 1:
+                properties_found = False
+        return properties_found
 
     def prune_objects(self, candidate_indicator_objects):
         """Prune any un-wanted properties from the Candidate Indicator Objects.
@@ -221,12 +238,17 @@ class IndicatorExtractor(object):
             # Do the contraindicator check
             if xsi_type in self.supported_objects and not self.contraindicator_check(entry):
                 # Prune the properties of the Object to correspond to the input config file
-                pruned_properties = self.prune_object_properties(object.properties.to_dict(), self.supported_objects[xsi_type])
-                if pruned_properties:
-                    pruned_properties["xsi:type"] = xsi_type
+                # First, test for the presence of only the required properties
+                if self.required_property_check(object, self.supported_objects[xsi_type]):
+                    # If the required properties are found, prune based on the full set (optional + required)
+                    full_properties = (self.supported_objects[xsi_type]["required"] 
+                                       + self.supported_objects[xsi_type]["optional"]
+                                       + self.supported_objects[xsi_type]["mutually_exclusive_required"])
+                    full_pruned_properties = self.prune_object_properties(object.properties.to_dict(), full_properties)
+                    full_pruned_properties["xsi:type"] = xsi_type
                     # Create a new Object with the pruned ObjectProperties
                     pruned_object = Object()
-                    pruned_object.properties = ObjectProperties.from_dict(pruned_properties)
+                    pruned_object.properties = ObjectProperties.from_dict(full_pruned_properties)
                     entry.object = pruned_object
                     # Add the updated Object History entry to the final list of Indicators
                     final_indicator_objects.append(entry)
@@ -238,7 +260,10 @@ class IndicatorExtractor(object):
         for k, v in d.items():
             new_key = parent_key + sep + k if parent_key else k
             if isinstance(v, collections.MutableMapping):
-                items.extend(self.flatten_dict(v, new_key, sep=sep).items())
+                if "enabled" not in v and "required" not in v:
+                    items.extend(self.flatten_dict(v, new_key, sep=sep).items())
+                else:
+                    items.append((new_key, v))
             elif isinstance(v, list):
                 for list_item in v:
                     items.extend(self.flatten_dict(list_item, new_key, sep=sep).items())
@@ -249,12 +274,17 @@ class IndicatorExtractor(object):
     def parse_object_config_dict(self, object_type, config_dict):
         """Parse an Object configuration dictionary."""
         flattened_dict = self.flatten_dict(config_dict)
-        for key, value in flattened_dict.items():
-            if value:
+        for key, config_options in flattened_dict.items():
+            if config_options["enabled"]:
                 if object_type not in self.supported_objects:
-                    self.supported_objects[object_type] = [key]
+                    self.supported_objects[object_type] = {"required":[], "optional":[], 
+                                                           "mutually_exclusive_required":[]}
+                if config_options["required"]:
+                    self.supported_objects[object_type]["required"].append(key)
+                elif "mutually_exclusive_required" in config_options and config_options["mutually_exclusive_required"]:
+                    self.supported_objects[object_type]["mutually_exclusive_required"].append(key)
                 else:
-                    self.supported_objects[object_type].append(key)
+                    self.supported_objects[object_type]["optional"].append(key)
 
     def parse_granular_config(self, granular_config_file):
         """Parse a granular JSON configuration structure."""
@@ -262,7 +292,8 @@ class IndicatorExtractor(object):
             with open(os.path.join("config",granular_config_file), mode='r') as f:
                 config = json.loads(f.read())
         except EnvironmentError:
-            pass
+            print "Error reading configuration file: " + granular_config_file
+            raise
         for config_type, config_values in config.items():
             if config_type == "supported objects":
                 for object_type, properties_dict in config_values.items():
@@ -282,7 +313,7 @@ class IndicatorExtractor(object):
             abstracted_options = self.config["abstracted_options"]
             for option, enabled in abstracted_options.items():
                 if option == "file_system_activity" and enabled:
-                    self.parse_granular_config("file_system_activity_config.json")
+                    self.parse_granular_config("file_system_activity_config_v2.json")
                 elif option == "registry_activity" and enabled:
                     self.parse_granular_config("registry_activity_config.json")
                 elif option == "mutex_activity" and enabled:
