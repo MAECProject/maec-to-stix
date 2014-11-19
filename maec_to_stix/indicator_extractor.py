@@ -4,6 +4,7 @@
 import json
 import os
 import collections
+import re
 import maec
 from maec.package.package import Package
 from maec.package.malware_subject import MalwareSubject
@@ -20,6 +21,89 @@ from stix.indicator import Indicator
 from stix.ttp import TTP, Behavior
 from stix.extensions.malware.maec_4_1_malware import MAECInstance
 
+class ConfigParser(object):
+    def __init__(self,config_dict):
+        # The configuration dictionary (parsed in from the JSON blob)
+        self.config_dict = config_dict
+        # List of supported Actions
+        self.supported_actions = []
+        # Dictionary of supported Objects and their properties
+        self.supported_objects = {}
+        self.parse_config()
+
+    def parse_object_config_dict(self, object_type, config_dict):
+        """Parse an Object configuration dictionary."""
+        flattened_dict = ConfigParser.flatten_dict(config_dict)
+        for key, config_options in flattened_dict.items():
+            if config_options["enabled"]:
+                if object_type not in self.supported_objects:
+                    self.supported_objects[object_type] = {"required":{}, "optional":{}, 
+                                                           "mutually_exclusive_required":{}}
+                if config_options["required"]:
+                    self.supported_objects[object_type]["required"][key] = config_options.get("whitelist", None)
+                elif "mutually_exclusive_required" in config_options and config_options["mutually_exclusive_required"]:
+                    self.supported_objects[object_type]["mutually_exclusive_required"][key] = config_options.get("whitelist", None)
+                else:
+                    self.supported_objects[object_type]["optional"][key] = config_options.get("whitelist", None)
+
+    def parse_granular_config(self, granular_config_file):
+        """Parse a granular JSON configuration structure."""
+        try:
+            with open(os.path.join("config",granular_config_file), mode='r') as f:
+                config = json.loads(f.read())
+        except EnvironmentError:
+            print "Error reading configuration file: " + granular_config_file
+            raise
+        for config_type, config_values in config.items():
+            if config_type == "supported objects":
+                for object_type, properties_dict in config_values.items():
+                    self.parse_object_config_dict(object_type, properties_dict)
+            elif config_type == "supported actions":
+                for enum_name, actions_dict in config_values.items():
+                    for action_name, enabled in actions_dict.items():
+                        if enabled:
+                            self.supported_actions.append(action_name)
+
+    def parse_config(self):
+        """Parse and break up the JSON configuration structure."""
+        # Use the granular options structure if specified
+        if self.config_dict["use_granular_options"]:
+            self.parse_granular_config("granular_config.json")
+        else:
+            abstracted_options = self.config_dict["abstracted_options"]
+            for option, enabled in abstracted_options.items():
+                if option == "file_system_activity" and enabled:
+                    self.parse_granular_config("file_system_activity_config.json")
+                elif option == "registry_activity" and enabled:
+                    self.parse_granular_config("registry_activity_config.json")
+                elif option == "mutex_activity" and enabled:
+                    self.parse_granular_config("mutex_activity_config.json")           
+                elif option == "process_activity" and enabled:
+                    self.parse_granular_config("process_activity_config.json")
+                elif option == "service_activity" and enabled:
+                    self.parse_granular_config("service_activity_config.json")
+                elif option == "network_activity" and enabled:
+                    self.parse_granular_config("network_activity_config.json")
+                elif option == "driver_activity" and enabled:
+                    self.parse_granular_config("driver_activity_config.json")
+    @staticmethod
+    def flatten_dict(d, parent_key='', sep='/'):
+        """Flatten an input dictionary."""
+        items = []
+        for k, v in d.items():
+            new_key = parent_key + sep + k if parent_key else k
+            if isinstance(v, collections.MutableMapping):
+                if "enabled" not in v and "required" not in v:
+                    items.extend(ConfigParser.flatten_dict(v, new_key, sep=sep).items())
+                else:
+                    items.append((new_key, v))
+            elif isinstance(v, list):
+                for list_item in v:
+                    items.extend(ConfigParser.flatten_dict(list_item, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
+
 class IndicatorExtractor(object):
     def __init__(self, maec_package, file_name, config, version):
         # The input MAEC Package
@@ -28,22 +112,16 @@ class IndicatorExtractor(object):
         self.stix_package = None
         # The input file name
         self.file_name = file_name
-        # JSON configuration blob
-        self.config = config
+        # Parsed configuration structure
+        self.config = ConfigParser(config)
         # Tool version
         self.version = version
-        # List of supported Actions
-        self.supported_actions = []
-        # Dictionary of supported Objects and their properties
-        self.supported_objects = {}
         # Set the STIX namsespace and alias
         stix.utils.set_id_namespace({'https://github.com/MAECProject/maec-to-stix' : 'maecToSTIX'})
         # Set the CybOX namespace and alias
         cybox.utils.set_id_namespace(cybox.utils.Namespace('https://github.com/MAECProject/maec-to-stix' , 'maecToSTIX'))
         # Set the MAEC namespace and alias
         maec.utils.set_id_namespace(cybox.utils.Namespace('https://github.com/MAECProject/maec-to-stix' , 'maecToSTIX'))
-        # Parse the config structure
-        self.parse_config()
         # Parse the MAEC Package 
         self.parse_package()
 
@@ -163,6 +241,14 @@ class IndicatorExtractor(object):
         # Return the contraindication value
         return contraindication
 
+    def whitelist_test(self, element_value, whitelist):
+        """Test an Object element value against a list of whitelisted values."""
+        if whitelist:
+            for whitelist_pattern in whitelist:
+                if re.match(whitelist_pattern, str(element_value)):
+                    return False
+        return True
+
     def prune_object_properties(self, object_dict, supported_properties, parent_key = None):
         """Prune any un-wanted properties from a single Object.
            Return a dictionary with only the allowed properties."""
@@ -174,12 +260,15 @@ class IndicatorExtractor(object):
                 updated_key = property_name
             # Test if the value is a string or a number
             if isinstance(property_value, basestring) or hasattr(property_value, "__int__"):
-                if not parent_key and property_name in supported_properties:
-                    pruned_dict[property_name] = property_value
+                if not parent_key and property_name in supported_properties.keys():
+                    # Test to make sure the element value doesn't match
+                    # against any whitelisted values
+                    if self.whitelist_test(property_value, supported_properties[property_name]):
+                        pruned_dict[property_name] = property_value
                 elif parent_key:
                     split_key = parent_key.split("/")
                     split_key.append(property_name)
-                    for object_path in supported_properties:
+                    for object_path in supported_properties.keys():
                         split_object_path = object_path.split("/")
                         # Test to make sure the root keys match
                         if split_key[0] == split_object_path[0]:
@@ -194,8 +283,10 @@ class IndicatorExtractor(object):
                                 if path_value not in split_object_path[1:]:
                                     match = False
                                     break
+                            # Test to make sure the element value doesn't match
+                            # against any whitelisted values
+                            if match and self.whitelist_test(property_value, supported_properties[object_path]):
                             # Add the property key/value if everything matched
-                            if match:
                                 pruned_dict[property_name] = property_value
             # Test if the value is a dictionary
             elif isinstance(property_value, dict):
@@ -220,7 +311,7 @@ class IndicatorExtractor(object):
         mutually_exclusive_properties = object_properties_dict["mutually_exclusive_required"]
         pruned_properties = self.prune_object_properties(object.properties.to_dict(), required_properties)
         # Check for the required properties
-        if len(self.flatten_dict(pruned_properties).keys()) != len(required_properties):
+        if len(ConfigParser.flatten_dict(pruned_properties).keys()) != len(required_properties.keys()):
             properties_found = False
         # Check for the mutually exclusive required properties
         if mutually_exclusive_properties:
@@ -238,14 +329,15 @@ class IndicatorExtractor(object):
             object = entry.object
             xsi_type = object.properties._XSI_TYPE
             # Do the contraindicator check
-            if xsi_type in self.supported_objects and not self.contraindicator_check(entry):
+            if xsi_type in self.config.supported_objects and not self.contraindicator_check(entry):
                 # Prune the properties of the Object to correspond to the input config file
                 # First, test for the presence of only the required properties
-                if self.required_property_check(object, self.supported_objects[xsi_type]):
+                if self.required_property_check(object, self.config.supported_objects[xsi_type]):
                     # If the required properties are found, prune based on the full set (optional + required)
-                    full_properties = (self.supported_objects[xsi_type]["required"] 
-                                       + self.supported_objects[xsi_type]["optional"]
-                                       + self.supported_objects[xsi_type]["mutually_exclusive_required"])
+                    full_properties = {}
+                    full_properties.update(self.config.supported_objects[xsi_type]["required"])
+                    full_properties.update(self.config.supported_objects[xsi_type]["optional"])
+                    full_properties.update(self.config.supported_objects[xsi_type]["mutually_exclusive_required"])
                     full_pruned_properties = self.prune_object_properties(object.properties.to_dict(), full_properties)
                     full_pruned_properties["xsi:type"] = xsi_type
                     # Create a new Object with the pruned ObjectProperties
@@ -255,85 +347,6 @@ class IndicatorExtractor(object):
                     # Add the updated Object History entry to the final list of Indicators
                     final_indicator_objects.append(entry)
         return final_indicator_objects
-
-    def flatten_dict(self, d, parent_key='', sep='/'):
-        """Flatten an input dictionary."""
-        items = []
-        for k, v in d.items():
-            new_key = parent_key + sep + k if parent_key else k
-            if isinstance(v, collections.MutableMapping):
-                if "enabled" not in v and "required" not in v:
-                    items.extend(self.flatten_dict(v, new_key, sep=sep).items())
-                else:
-                    items.append((new_key, v))
-            elif isinstance(v, list):
-                for list_item in v:
-                    items.extend(self.flatten_dict(list_item, new_key, sep=sep).items())
-            else:
-                items.append((new_key, v))
-        return dict(items)
-
-    def parse_object_config_dict(self, object_type, config_dict):
-        """Parse an Object configuration dictionary."""
-        flattened_dict = self.flatten_dict(config_dict)
-        for key, config_options in flattened_dict.items():
-            if config_options["enabled"]:
-                if object_type not in self.supported_objects:
-                    self.supported_objects[object_type] = {"required":[], "optional":[], 
-                                                           "mutually_exclusive_required":[]}
-                if config_options["required"]:
-                    self.supported_objects[object_type]["required"].append(key)
-                elif "mutually_exclusive_required" in config_options and config_options["mutually_exclusive_required"]:
-                    self.supported_objects[object_type]["mutually_exclusive_required"].append(key)
-                else:
-                    self.supported_objects[object_type]["optional"].append(key)
-
-    def parse_granular_config(self, granular_config_file):
-        """Parse a granular JSON configuration structure."""
-        try:
-            with open(os.path.join("config",granular_config_file), mode='r') as f:
-                config = json.loads(f.read())
-        except EnvironmentError:
-            print "Error reading configuration file: " + granular_config_file
-            raise
-        for config_type, config_values in config.items():
-            if config_type == "supported objects":
-                for object_type, properties_dict in config_values.items():
-                    self.parse_object_config_dict(object_type, properties_dict)
-            elif config_type == "supported actions":
-                for enum_name, actions_dict in config_values.items():
-                    for action_name, enabled in actions_dict.items():
-                        if enabled:
-                            self.supported_actions.append(action_name)
-
-    def parse_config(self):
-        """Parse and break up the JSON configuration structure."""
-        # Use the granular options structure if specified
-        if self.config["use_granular_options"]:
-            self.parse_granular_config("granular_config.json")
-        else:
-            abstracted_options = self.config["abstracted_options"]
-            for option, enabled in abstracted_options.items():
-                if option == "file_system_activity" and enabled:
-                    self.parse_granular_config("file_system_activity_config.json")
-                elif option == "registry_activity" and enabled:
-                    self.parse_granular_config("registry_activity_config.json")
-                elif option == "mutex_activity" and enabled:
-                    self.parse_granular_config("mutex_activity_config.json")           
-                elif option == "process_activity" and enabled:
-                    self.parse_granular_config("process_activity_config.json")
-                elif option == "service_activity" and enabled:
-                    self.parse_granular_config("service_activity_config.json")
-                elif option == "network_activity" and enabled:
-                    self.parse_granular_config("network_activity_config.json")
-                elif option == "driver_activity" and enabled:
-                    self.parse_granular_config("driver_activity_config.json")
-
-    def parse_package(self):
-        """Parse a MAEC Package."""
-        if self.maec_package.malware_subjects:
-            for malware_subject in self.maec_package.malware_subjects:
-                self.parse_malware_subject(malware_subject)
 
     def parse_object_history(self, object_history):
         """Parse the Object History to build the list of
@@ -346,7 +359,7 @@ class IndicatorExtractor(object):
             action_match = False
             # First, test if one of the supported Actions operated on the Object
             for context_entry in action_context:
-                if context_entry[0] in self.supported_actions:
+                if context_entry[0] in self.config.supported_actions:
                     action_match = True
                     break
             # If a supported Action was found, add the Object to the list of candidates
@@ -386,3 +399,9 @@ class IndicatorExtractor(object):
             ttp_id = self.add_stix_ttp(malware_subject)
             for bundle in malware_subject.findings_bundles.bundle:
                 self.parse_bundle(bundle, ttp_id)
+
+    def parse_package(self):
+        """Parse a MAEC Package."""
+        if self.maec_package.malware_subjects:
+            for malware_subject in self.maec_package.malware_subjects:
+                self.parse_malware_subject(malware_subject)
