@@ -68,7 +68,10 @@ def main():
     # Attempt to extract Indicators from the MAEC document
     elif args.extract:
         extractor = IndicatorExtractor(maec_package, args.input, config_parser, __version__)
-        write_stix_package(extractor.stix_package, args.output)
+        if extractor.stix_package.indicators:
+            write_stix_package(extractor.stix_package, args.output)
+        else:
+            print "No indicators were extracted. Output file not created."
     # Print the Indicator extraction configuration options
     elif args.print_extract_options:
         config_parser.print_config()
