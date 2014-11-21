@@ -58,7 +58,7 @@ def main():
     if args.extract or args.print_extract_options:
         # Parse and load the JSON config structure
         try:
-            with open('extractor_config.json', mode='r') as f:
+            with open('maec_to_stix/config/extractor_config.json', mode='r') as f:
                 extractor_config = json.loads(f.read())
         except EnvironmentError:
             print "Error reading extractor configuration file (extractor_config.json)"
