@@ -5,6 +5,7 @@ import json
 import os
 import collections
 import re
+import pprint
 import maec.utils
 from maec.package.package import Package
 from maec.package.malware_subject import MalwareSubject
@@ -31,6 +32,42 @@ class ConfigParser(object):
         # Dictionary of supported Objects and their properties
         self.supported_objects = {}
         self.parse_config()
+
+    def print_config(self):
+        """Print the current set of configuration parameters to stdout."""
+        # Print the general parameters
+        print "\n[Configuration Parameters]"
+        for key, value in self.config_dict.items():
+            if isinstance(value, bool):
+                print str(" {0} : {1}").format(key,value)
+            elif isinstance(value, dict):
+                print str(" {0}").format(key)
+                for embedded_key, embedded_value in value.items():
+                    print str("   {0} : {1}").format(embedded_key,embedded_value)
+        # Print the supported Actions
+        print "\n[Supported Actions]"
+        for action_name in sorted(self.supported_actions):
+            print str(" {0}").format(action_name)
+        # Print the supported Objects
+        print "\n[Supported Objects]"
+        for object_type in sorted(self.supported_objects):
+            supported_fields = self.supported_objects[object_type]
+            print str(" {0}").format(object_type)
+            required = supported_fields["required"]
+            mutually_exclusive_required = supported_fields["mutually_exclusive_required"]
+            optional = supported_fields["optional"]
+            if required:
+                print "   Required Fields"
+                for field in sorted(required):
+                    print  str("      {0}").format(field)
+            if mutually_exclusive_required:
+                print "   Mutually Exclusive Required Fields"
+                for field in sorted(mutually_exclusive_required):
+                    print  str("      {0}").format(field)
+            if optional:
+                print "   Optional Fields"
+                for field in sorted(optional):
+                    print  str("      {0}").format(field)
 
     def parse_object_config_dict(self, object_type, config_dict):
         """Parse an Object configuration dictionary."""
