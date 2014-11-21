@@ -296,7 +296,7 @@ class IndicatorExtractor(object):
         # The input file name
         self.file_name = file_name
         # Parsed configuration structure
-        self.config = ConfigParser(config)
+        self.config = config
         # Indicator Filter instance
         self.indicator_filter = IndicatorFilter(self.config)
         # Tool version
