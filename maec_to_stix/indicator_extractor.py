@@ -444,6 +444,8 @@ class IndicatorExtractor(object):
 
     def parse_bundle(self, bundle, ttp_id):
         """Parse a MAEC Bundle."""
+        # Deduplicate the Bundle (for creating a full Object History for each Object)
+        bundle.deduplicate()
         # Normalize the Objects in the Bundle, if specified in the config
         if self.config.config_dict["normalize_objects"]:
             bundle.normalize_objects()
