@@ -30,10 +30,14 @@ __version__ = 0.10
 
 def write_stix_package(stix_package, output_file):
     """Write a STIX Package to an XML file."""
-    out_file = open(output_file, "w")
-    out_file.write(stix_package.to_xml())
-    out_file.flush()
-    out_file.close()
+    try:
+        stix_xml = stix_package.to_xml()
+        out_file = open(output_file, "w")
+        out_file.write(stix_xml)
+        out_file.flush()
+        out_file.close()
+    except Exception:
+        raise
 
 def main():
     # Setup the argument parser
@@ -71,7 +75,7 @@ def main():
         if extractor.stix_package.indicators:
             write_stix_package(extractor.stix_package, args.output)
         else:
-            print "No indicators were extracted. Output file not created."
+            print "No indicators were extracted. STIX Output file not created."
     # Print the Indicator extraction configuration options
     elif args.print_extract_options:
         config_parser.print_config()
