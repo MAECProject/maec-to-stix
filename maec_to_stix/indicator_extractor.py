@@ -87,7 +87,8 @@ class ConfigParser(object):
     def parse_granular_config(self, granular_config_file):
         """Parse a granular JSON configuration structure."""
         try:
-            with open(os.path.join("config",granular_config_file), mode='r') as f:
+            config_filename = os.path.join(os.path.dirname(__file__) + "/config", granular_config_file)
+            with open(config_filename, mode='r') as f:
                 config = json.loads(f.read())
         except EnvironmentError:
             print "Error reading configuration file: " + granular_config_file
