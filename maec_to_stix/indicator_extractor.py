@@ -24,7 +24,7 @@ from stix.ttp import TTP, Behavior
 from stix.extensions.malware.maec_4_1_malware import MAECInstance
 
 class ConfigParser(object):
-    def __init__(self,config_dict):
+    def __init__(self,config_dict=None):
         # The configuration dictionary (parsed in from the JSON blob)
         self.config_dict = config_dict
         # List of supported Actions
@@ -105,6 +105,15 @@ class ConfigParser(object):
 
     def parse_config(self):
         """Parse and break up the JSON configuration structure."""
+        # If the configuration dictionary wasn't specified, parse and load it
+        if not self.config_dict:
+            try:
+                config_filename = os.path.join(os.path.dirname(__file__) + "/config", "extractor_config.json")
+                with open(config_filename, mode='r') as f:
+                    self.config_dict = json.loads(f.read())
+            except EnvironmentError:
+                print "Error reading extractor configuration file (extractor_config.json)"
+                raise
         # Use the granular options structure if specified
         if self.config_dict["use_granular_options"]:
             self.parse_granular_config("granular_config.json")
