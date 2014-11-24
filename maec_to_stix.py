@@ -31,6 +31,7 @@ def write_stix_package(stix_package, output_file):
     try:
         stix_xml = stix_package.to_xml()
         out_file = open(output_file, "w")
+        out_file.write("<?xml version='1.0' encoding='UTF-8'?>\n")
         out_file.write(stix_xml)
         out_file.flush()
         out_file.close()
