@@ -1,0 +1,11 @@
+{
+  "use_granular_options":false,
+  "normalize_objects":true,
+  "abstracted_options": {"file_system_activity":true,
+                         "registry_activity":true,
+						 "mutex_activity":true,
+						 "process_activity":true,
+						 "network_activity":true,
+						 "service_activity":true,
+						 "driver_activity":true}
+}
