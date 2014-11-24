@@ -49,17 +49,17 @@ def main():
 
     # Parse the input MAEC Package
     if args.wrap or args.extract:
-        maec_package = maec.parse_xml_instance(args.input)['api']
+        maec_package = maec.parse_xml_instance(args.infile)['api']
 
     # Wrap the MAEC document in a STIX Package
     if args.wrap:
-        stix_package = wrap_maec(maec_package, args.input)
-        write_stix_package(stix_package, args.output)
+        stix_package = wrap_maec(maec_package, args.infile)
+        write_stix_package(stix_package, args.outfile)
     # Attempt to extract Indicators from the MAEC document
     elif args.extract:
-        extractor = IndicatorExtractor(maec_package, args.input)
+        extractor = IndicatorExtractor(maec_package, args.infile)
         if extractor.stix_package.indicators:
-            write_stix_package(extractor.stix_package, args.output)
+            write_stix_package(extractor.stix_package, args.outfile)
         else:
             print "No indicators were extracted. STIX Output file not created."
     # Print the Indicator extraction configuration options
