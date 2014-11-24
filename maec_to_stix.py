@@ -14,8 +14,7 @@
 
 # MAEC to STIX Converter Script
 # Copyright 2014, MITRE Corp
-# v0.10 - BETA
-# Updated 11/21/2014
+# Updated 11/24/2014
 
 import sys
 import os
@@ -23,10 +22,9 @@ import traceback
 import argparse
 import json
 import maec
+from maec_to_stix import __version__
 from maec_to_stix.stix_wrapper import wrap_maec
 from maec_to_stix.indicator_extractor import IndicatorExtractor, ConfigParser
-
-__version__ = 0.10
 
 def write_stix_package(stix_package, output_file):
     """Write a STIX Package to an XML file."""
@@ -54,30 +52,20 @@ def main():
     if args.wrap or args.extract:
         maec_package = maec.parse_xml_instance(args.input)['api']
 
-    # Instantiate the configuration parser
-    if args.extract or args.print_extract_options:
-        # Parse and load the JSON config structure
-        try:
-            with open('maec_to_stix/config/extractor_config.json', mode='r') as f:
-                extractor_config = json.loads(f.read())
-        except EnvironmentError:
-            print "Error reading extractor configuration file (extractor_config.json)"
-            raise
-        config_parser = ConfigParser(extractor_config)
-
     # Wrap the MAEC document in a STIX Package
     if args.wrap:
-        stix_package = wrap_maec(maec_package, args.input, __version__)
+        stix_package = wrap_maec(maec_package, args.input)
         write_stix_package(stix_package, args.output)
     # Attempt to extract Indicators from the MAEC document
     elif args.extract:
-        extractor = IndicatorExtractor(maec_package, args.input, config_parser, __version__)
+        extractor = IndicatorExtractor(maec_package, args.input)
         if extractor.stix_package.indicators:
             write_stix_package(extractor.stix_package, args.output)
         else:
             print "No indicators were extracted. STIX Output file not created."
     # Print the Indicator extraction configuration options
     elif args.print_extract_options:
+        config_parser = ConfigParser()
         config_parser.print_config()
     else:
         print "Error: Unspecified mode. One of wrap (-w), indicator extraction (-e), or indicator extraction option printing (-p) modes must be specified."

@@ -7,6 +7,7 @@ import collections
 import re
 import pprint
 import maec.utils
+from __init__ import __version__
 from maec.package.package import Package
 from maec.package.malware_subject import MalwareSubject
 from maec.bundle.bundle import Bundle, ObjectList, ActionList
@@ -134,6 +135,7 @@ class ConfigParser(object):
                     self.parse_granular_config("network_activity_config.json")
                 elif option == "driver_activity" and enabled:
                     self.parse_granular_config("driver_activity_config.json")
+
     @staticmethod
     def flatten_dict(d, parent_key='', sep='/'):
         """Flatten an input dictionary."""
@@ -298,7 +300,7 @@ class IndicatorFilter(object):
         return final_indicator_objects
 
 class IndicatorExtractor(object):
-    def __init__(self, maec_package, file_name, config, version):
+    def __init__(self, maec_package, file_name=None):
         # The input MAEC Package
         self.maec_package = maec_package
         # The output STIX Package (with Indicators)
@@ -306,15 +308,9 @@ class IndicatorExtractor(object):
         # The input file name
         self.file_name = file_name
         # Parsed configuration structure
-        self.config = config
-        # Indicator Filter instance
-        self.indicator_filter = IndicatorFilter(self.config)
-        # Tool version
-        self.version = version
-        # Set the STIX namsespace and alias
+        self.config = ConfigParser()
+        # Set the STIX namespace and alias
         stix.utils.set_id_namespace({'https://github.com/MAECProject/maec-to-stix' : 'maecToSTIX'})
-        # Set the CybOX namespace and alias
-        cybox.utils.set_id_namespace(cybox.utils.Namespace('https://github.com/MAECProject/maec-to-stix' , 'maecToSTIX'))
         # Set the MAEC namespace and alias
         maec.utils.set_id_namespace(cybox.utils.Namespace('https://github.com/MAECProject/maec-to-stix' , 'maecToSTIX'))
         # Parse the MAEC Package 
@@ -386,12 +382,13 @@ class IndicatorExtractor(object):
         stix_package = STIXPackage()
         stix_header = STIXHeader()
         stix_header.add_package_intent("Indicators - Malware Artifacts")
-        stix_header.title = "STIX Indicators extracted from MAEC file: " + str(self.file_name)
+        if self.file_name:
+            stix_header.title = "STIX Indicators extracted from MAEC file: " + str(self.file_name)
         # Add the Information Source to the STIX Header
         tool_info = ToolInformation()
         stix_header.information_source = InformationSource()
         tool_info.name = "MAEC to STIX"
-        tool_info.version = str(self.version)
+        tool_info.version = str(__version__)
         stix_header.information_source.tools = ToolInformationList(tool_info)
         stix_package.stix_header = stix_header
         return stix_package
@@ -445,8 +442,10 @@ class IndicatorExtractor(object):
         """Create an add Indicators derived from a MAEC Bundle."""
         # Parse the object history to build the list of candidate Objects
         candidate_indicator_objects = self.parse_object_history(object_history)
+        # Instantiate the indicator filter
+        indicator_filter = IndicatorFilter(self.config)
         # Prune the candidate objects
-        pruned_indicator_objects = self.indicator_filter.prune_objects(candidate_indicator_objects)
+        pruned_indicator_objects = indicator_filter.prune_objects(candidate_indicator_objects)
         # Prepare the candidate objects for Indicatorization (TM)
         self.prepare_objects(pruned_indicator_objects)
         # Create and add the STIX Indicators for each of the final candidate indicator Objects
