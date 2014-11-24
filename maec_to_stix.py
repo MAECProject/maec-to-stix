@@ -18,9 +18,7 @@
 
 import sys
 import os
-import traceback
 import argparse
-import json
 import maec
 from maec_to_stix import __version__
 from maec_to_stix.stix_wrapper import wrap_maec
@@ -65,7 +63,7 @@ def main():
         else:
             print "No indicators were extracted. STIX Output file not created."
     # Print the Indicator extraction configuration options
-    elif args.print_extract_options:
+    elif args.print_options:
         config_parser = ConfigParser()
         config_parser.print_config()
     else:
