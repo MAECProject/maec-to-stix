@@ -1,4 +1,5 @@
 import re
+from config_parser import ConfigParser
 
 class IndicatorFilter(object):
     def __init__(self, config):
