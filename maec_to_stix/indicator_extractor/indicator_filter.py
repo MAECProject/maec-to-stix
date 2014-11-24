@@ -13,7 +13,7 @@ class IndicatorFilter(object):
         # Primarily applicable to files (?).
         self.modifiers = ["move", "copy", "rename"]
 
-    def contraindicator_check(self, object_history_entry):
+    def _contraindicator_check(self, object_history_entry):
         """Check an Object for Action-based contraindicators that may render it
            useless for detection. E.g., that the Object was created and later deleted."""
         object_id = object_history_entry.object.id_
