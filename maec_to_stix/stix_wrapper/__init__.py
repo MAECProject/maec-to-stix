@@ -2,7 +2,7 @@
 # Wrapper methods
 import maec
 import stix.utils
-from __init__ import __version__
+import maec_to_stix
 from stix.core import STIXPackage, STIXHeader
 from stix.common import InformationSource
 from stix.ttp import TTP, Behavior
@@ -39,7 +39,7 @@ def wrap_maec(maec_package, file_name=None):
     tool_info = ToolInformation()
     stix_header.information_source = InformationSource()
     tool_info.name = "MAEC to STIX"
-    tool_info.version = str(__version__)
+    tool_info.version = str(maec_to_stix.__version__)
     stix_header.information_source.tools = ToolInformationList(tool_info)
     stix_package.stix_header = stix_header
     
