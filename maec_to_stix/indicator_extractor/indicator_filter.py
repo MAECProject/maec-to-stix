@@ -1,4 +1,6 @@
 import re
+from cybox.core import Object
+from cybox.common import ObjectProperties
 from config_parser import ConfigParser
 
 class IndicatorFilter(object):
