@@ -14,15 +14,14 @@
 
 # MAEC to STIX Converter Script
 # Copyright 2014, MITRE Corp
-# Updated 11/24/2014
+# Updated 11/25/2014
 
 import sys
 import os
 import argparse
 import maec
-from maec_to_stix import __version__
-from maec_to_stix.stix_wrapper import wrap_maec
-from maec_to_stix.indicator_extractor import IndicatorExtractor, ConfigParser
+from maec_to_stix import __version__, wrap_maec_package, extract_indicators
+from maec_to_stix.indicator_extractor import ConfigParser
 
 def write_stix_package(stix_package, output_file):
     """Write a STIX Package to an XML file."""
@@ -47,19 +46,15 @@ def main():
     opts_group.add_argument("--print_options", "-p", help="print out the current set of indicator extraction options, including the supported Actions and Objects.", action="store_true", default=False)
     args = parser.parse_args()
 
-    # Parse the input MAEC Package
-    if args.wrap or args.extract:
-        maec_package = maec.parse_xml_instance(args.infile)['api']
-
     # Wrap the MAEC document in a STIX Package
     if args.wrap:
-        stix_package = wrap_maec(maec_package, args.infile)
+        stix_package = wrap_maec_package(args.infile)
         write_stix_package(stix_package, args.outfile)
     # Attempt to extract Indicators from the MAEC document
     elif args.extract:
-        extractor = IndicatorExtractor(maec_package, args.infile)
-        if extractor.stix_package.indicators:
-            write_stix_package(extractor.stix_package, args.outfile)
+        stix_package = extract_indicators(args.infile)
+        if stix_package.indicators:
+            write_stix_package(stix_package, args.outfile)
         else:
             print "No indicators were extracted. STIX Output file not created."
     # Print the Indicator extraction configuration options
