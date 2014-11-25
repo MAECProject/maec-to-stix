@@ -62,8 +62,8 @@ class IndicatorExtractor(object):
         return ttp.id_
 
     def add_stix_indicators(self, final_indicator_objects, ttp_id):
-        """Create and add STIX Indicators for a list of Object History entries.
-           Link each Indicator to their Indicated TTP.
+        """Create and add STIX Indicators for a list of Object History entries. 
+        Link each Indicator to their Indicated TTP.
 
         Note:
             Each STIX Indicator is added to the STIX Package stored in the ``stix_package`` class
@@ -163,7 +163,7 @@ class IndicatorExtractor(object):
 
     def prepare_objects(self, final_indicator_objects):
         """Prepare the final Indicator Objects for translation into STIX Indicators.
-           Set their condition attributes as appropriate.
+        Set their condition attributes as appropriate.
 
         Args:
             final_indicator_objects: a list of ``maec.bundle.object_history.ObjectHistoryEntry`` objects representing
@@ -180,8 +180,7 @@ class IndicatorExtractor(object):
             object.properties = ObjectProperties.from_dict(updated_properties_dict)
 
     def parse_object_history(self, object_history):
-        """Parse the Object History to build the list of
-           candidate Objects for use in Indicators.
+        """Parse the Object History to build the list of candidate Objects for use in Indicators.
            
         Args:
             object_history: a ``maec.bundle.object_history.ObjectHistory`` object, containing
@@ -210,7 +209,7 @@ class IndicatorExtractor(object):
 
     def create_bundle_indicators(self, object_history, ttp_id):
         """Create STIX Indicators from the contents of a MAEC Bundle.
-           Add them to the previously created STIX Package.
+        Add them to the previously created STIX Package.
 
         Note:
             This method serves as the "uber" method for creating Indicators from a Bundle.
