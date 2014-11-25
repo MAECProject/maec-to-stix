@@ -1,5 +1,6 @@
-# MAEC to STIX
-# Wrapper methods
+# Copyright (c) 2014, The MITRE Corporation. All rights reserved.
+# See LICENSE.txt for complete terms.
+
 import maec
 import stix.utils
 import maec_to_stix

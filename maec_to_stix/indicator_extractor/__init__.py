@@ -1,3 +1,6 @@
+# Copyright (c) 2014, The MITRE Corporation. All rights reserved.
+# See LICENSE.txt for complete terms.
+
 import maec.utils
 import maec_to_stix
 from maec.package.package import Package
