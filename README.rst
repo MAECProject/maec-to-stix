@@ -36,6 +36,7 @@ instructions.
 
 -  `python-maec >=4.1.0.8 and <= 4.2.0.0 <https://github.com/MAECProject/python-maec>`_
 -  `python-stix >=1.1.1.2 and <= 1.2.0.0. <https://github.com/STIXProject/python-stix>`_
+-  `python-cybox >=2.1.0.8 and <= 2.2.0.0. <https://github.com/STIXProject/python-stix>`_
 
 Getting Started
 ---------------
@@ -52,7 +53,7 @@ The stix-ramrod repository has the following layout:
 * ``docs/`` - Used to build the `documentation
   <http://maec-to-stix.readthedocs.org>`_.
 * ``maec_to_stix/`` - The main stix-ramrod source.
-* ``samples/`` - Sample MAEC/STIX XML documents
+* ``examples/`` - Examples of maec-to-stix usage.
 
 
 Versioning
