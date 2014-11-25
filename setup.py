@@ -17,6 +17,16 @@ def get_version():
 with open('README.rst') as f:
     readme = f.read()
 
+extras_require = {
+    'docs': [
+        'Sphinx==1.2.1',
+        # TODO: remove when updating to Sphinx 1.3, since napoleon will be
+        # included as sphinx.ext.napoleon
+        'sphinxcontrib-napoleon==0.2.4',
+    ]
+}
+
+
 setup(
     name="maec_to_stix",
     version=get_version(),
@@ -29,6 +39,7 @@ setup(
     include_package_data=True,
     package_data={'maec_to_stix': ['config/*.json']},
     install_requires=['maec>=4.1.0.8,<4.1.1.0', 'cybox>=2.1.0.8,<2.1.1.0', 'stix>=1.1.1.2,<1.2.0.0'],
+	extras_require=extras_require,
     classifiers=[
         "Programming Language :: Python",
         "Development Status :: 4 - Beta",
