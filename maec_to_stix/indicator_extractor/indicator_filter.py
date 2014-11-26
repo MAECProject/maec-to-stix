@@ -124,8 +124,17 @@ class IndicatorFilter(object):
         return properties_found
 
     def prune_objects(self, candidate_indicator_objects):
-        """Prune any un-wanted properties from the Candidate Indicator Objects.
-           Also, deduplicate any identical Objects."""
+        """Perform contraindicator and required property checking and prune un-wanted 
+        properties from the input list of candidate Indicator CybOX Objects. 
+        
+        Args:
+            candidate_indicator_objects: a list of ``maec.bundle.object_history.ObjectHistoryEntry`` objects representing
+                the initial list of CybOX Objects that may be used in the STIX Indicators.
+
+        Returns:
+            A list of ``maec.bundle.object_history.ObjectHistoryEntry`` objects representing
+                the final list of checked and pruned CybOX Objects that will be used for the STIX Indicators.
+        """
         final_indicator_objects = []
         # Prune any unwanted properties from Objects
         for entry in candidate_indicator_objects:
