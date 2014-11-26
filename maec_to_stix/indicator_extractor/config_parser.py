@@ -16,7 +16,14 @@ class ConfigParser(object):
         self.parse_config()
 
     def print_config(self):
-        """Print the current set of configuration parameters to stdout."""
+        """Print the current set of configuration parameters to stdout.
+        
+        Note: this method prints detailed information about the parsed Indicator
+            extraction configuration, including:
+                1. The general Indicator extraction parameters (from config/extractor_config.json)
+                2. The supported Actions (derived from all of the parsed JSON configuration files)
+                3. The supported Objects and their properties (derived from all of the parsed JSON configuration files)
+        """
         # Print the general parameters
         print "\n[Configuration Parameters]"
         for key, value in self.config_dict.items():
@@ -86,7 +93,7 @@ class ConfigParser(object):
                             self.supported_actions.append(action_name)
 
     def parse_config(self):
-        """Parse and break up the JSON configuration structure."""
+        """Parse the JSON configuration structure and build the appropriate data structures."""
         # If the configuration dictionary wasn't specified, parse and load it
         if not self.config_dict:
             try:
@@ -119,7 +126,17 @@ class ConfigParser(object):
 
     @staticmethod
     def flatten_dict(d, parent_key='', sep='/'):
-        """Flatten an input dictionary."""
+        """Flatten a nested dictionary into one with a single set of key/value pairs.
+        
+        Args:
+            d: an input dictionary to flatten.
+            parent_key: the parent_key, for use in building the root key name
+                when handling nested dictionaries.
+            sep: the separator to use between the concatenated keys in the root key.
+
+        Return:
+            The flattened representation of the input dictionary.
+        """
         items = []
         for k, v in d.items():
             new_key = parent_key + sep + k if parent_key else k
