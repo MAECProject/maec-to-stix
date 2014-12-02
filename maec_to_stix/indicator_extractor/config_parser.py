@@ -43,14 +43,14 @@ class ConfigParser(object):
             supported_fields = self.supported_objects[object_type]
             print str(" {0}").format(object_type)
             required = supported_fields["required"]
-            mutually_exclusive_required = supported_fields["mutually_exclusive_required"]
+            mutually_exclusive_required = supported_fields["mutually_exclusive"]
             optional = supported_fields["optional"]
             if required:
                 print "   Required Fields"
                 for field in sorted(required):
                     print  str("      {0}").format(field)
             if mutually_exclusive_required:
-                print "   Mutually Exclusive Required Fields"
+                print "   Mutually Exclusive (Required) Fields"
                 for field in sorted(mutually_exclusive_required):
                     print  str("      {0}").format(field)
             if optional:
@@ -65,11 +65,12 @@ class ConfigParser(object):
             if config_options["enabled"]:
                 if object_type not in self.supported_objects:
                     self.supported_objects[object_type] = {"required":{}, "optional":{}, 
-                                                           "mutually_exclusive_required":{}}
+                                                           "mutually_exclusive":{}}
                 if config_options["required"]:
-                    self.supported_objects[object_type]["required"][key] = config_options.get("whitelist", None)
-                elif "mutually_exclusive_required" in config_options and config_options["mutually_exclusive_required"]:
-                    self.supported_objects[object_type]["mutually_exclusive_required"][key] = config_options.get("whitelist", None)
+                    if "mutually_exclusive" in config_options and config_options["mutually_exclusive"]:
+                        self.supported_objects[object_type]["mutually_exclusive"][key] = config_options.get("whitelist", None)
+                    else:
+                        self.supported_objects[object_type]["required"][key] = config_options.get("whitelist", None)
                 else:
                     self.supported_objects[object_type]["optional"][key] = config_options.get("whitelist", None)
 
