@@ -62,7 +62,7 @@ def main():
         config_parser = ConfigParser()
         config_parser.print_config()
     else:
-        print "Error: Unspecified mode. One of wrap (-w), indicator extraction (-e), or indicator extraction option printing (-p) modes must be specified."
+        parser.print_usage()
 
 
 if __name__ == "__main__":
