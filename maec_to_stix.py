@@ -16,8 +16,6 @@
 # Copyright 2014, MITRE Corp
 # Updated 12/03/2014
 
-import sys
-import os
 import argparse
 import maec
 from maec_to_stix import __version__, wrap_maec_package, extract_indicators
