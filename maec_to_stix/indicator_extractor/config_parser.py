@@ -82,9 +82,9 @@ class ConfigParser(object):
             # Load the default installed configuration file if none is specified
             if not self.config_file:
                 config_filename = os.path.join(os.path.dirname(__file__) + "/config", granular_config_file)
+            # Otherwise, load the specified configuration file
             else:
                 config_filename = os.path.join(os.path.dirname(self.config_file), granular_config_file)
-            # Otherwise, load the specified configuration file
             with open(config_filename, mode='r') as f:
                 config = json.loads(f.read())
         except EnvironmentError:
