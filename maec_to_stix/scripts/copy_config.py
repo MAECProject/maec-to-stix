@@ -11,7 +11,8 @@ from pkg_resources import resource_filename
 def main():
     # Setup the argument parser
     parser = argparse.ArgumentParser(description="MAEC to STIX configuration copying script")
-    parser.add_argument("outpath", help="the output directory into which to copy the MAEC to STIX Indicator extraction configuration files.")
+    parser.add_argument("outpath", help="""the output directory into which to copy the MAEC to STIX Indicator extraction configuration files. 
+                                           If the directory does not already exist, it will be created by the script.""")
     args = parser.parse_args()
 
     # Create the output directory if it does not exist
