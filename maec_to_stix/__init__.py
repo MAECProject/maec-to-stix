@@ -25,11 +25,14 @@ def wrap_maec_package(package_filename):
 
     return stix_package
 
-def extract_indicators(package_filename):
+def extract_indicators(package_filename, config_file=None):
     """Extract STIX Indicators from a MAEC Package file.
     
     Args:
         package_filename: The name of the MAEC Package file to extract indicators from.
+        config_file: (optional) The path to the indicator extraction configuration file
+            (typically 'extractor_config.json') to be used for configuring the behavior
+            of the Indicator extraction. 
 
     Returns:
         A ``stix.STIXPackage`` instance with the extracted STIX Indicators.
@@ -39,6 +42,6 @@ def extract_indicators(package_filename):
     maec_package = maec.parse_xml_instance(package_filename)['api']
 
     # Extract the STIX Indicators from the MAEC Package
-    indicator_extractor = IndicatorExtractor(maec_package, package_filename)
+    indicator_extractor = IndicatorExtractor(maec_package, package_filename, config_file)
     
     return indicator_extractor.stix_package
