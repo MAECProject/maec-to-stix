@@ -17,7 +17,6 @@
 # Updated 12/03/2014
 
 import argparse
-import maec
 from maec_to_stix import __version__, wrap_maec_package, extract_indicators
 from maec_to_stix.indicator_extractor import ConfigParser
 
@@ -58,11 +57,10 @@ def main():
             print "No indicators were extracted. STIX Output file not created."
     # Print the Indicator extraction configuration options
     elif args.print_options:
-        config_parser = ConfigParser()
+        config_parser = ConfigParser(args.config_file)
         config_parser.print_config()
     else:
         parser.print_usage()
-
 
 if __name__ == "__main__":
     main()    
