@@ -149,7 +149,7 @@ class IndicatorFilter(object):
                     full_properties = {}
                     full_properties.update(self.config.supported_objects[xsi_type]["required"])
                     full_properties.update(self.config.supported_objects[xsi_type]["optional"])
-                    full_properties.update(self.config.supported_objects[xsi_type]["mutually_exclusive_required"])
+                    full_properties.update(self.config.supported_objects[xsi_type]["mutually_exclusive"])
                     full_pruned_properties = self._prune_object_properties(object.properties.to_dict(), full_properties)
                     full_pruned_properties["xsi:type"] = xsi_type
                     # Create a new Object with the pruned ObjectProperties
