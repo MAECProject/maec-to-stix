@@ -57,7 +57,7 @@ def main():
             print "No indicators were extracted. STIX Output file not created."
     # Print the Indicator extraction configuration options
     elif args.print_options:
-        config_parser = ConfigParser(args.config_file)
+        config_parser = ConfigParser(args.config_directory)
         config_parser.print_config()
     else:
         parser.print_usage()
