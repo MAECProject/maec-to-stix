@@ -6,9 +6,9 @@ import collections
 import json
 
 class ConfigParser(object):
-    def __init__(self, config_file=None):
-        # The path to the configuration file
-        self.config_file = config_file
+    def __init__(self, config_directory=None):
+        # The path to the directory where the configuration files can be found
+        self.config_directory = config_directory
         # The parsed configuration dictionary
         self.config_dict = {}
         # List of supported Actions
@@ -79,12 +79,12 @@ class ConfigParser(object):
     def _parse_granular_config(self, granular_config_file):
         """Parse a granular JSON configuration structure."""
         try:
-            # Load the default installed configuration file if none is specified
-            if not self.config_file:
+            # Load the default installed configuration file if no directory is specified
+            if not self.config_directory:
                 config_filename = os.path.join(os.path.dirname(__file__) + "/config", granular_config_file)
             # Otherwise, load the specified configuration file
             else:
-                config_filename = os.path.join(os.path.dirname(self.config_file), granular_config_file)
+                config_filename = os.path.join(self.config_directory, granular_config_file)
             with open(config_filename, mode='r') as f:
                 config = json.loads(f.read())
         except EnvironmentError:
@@ -104,12 +104,12 @@ class ConfigParser(object):
         """Parse the JSON configuration structure and build the appropriate data structures."""
         # Parse and load the configuration file
         try:
-            # Load the default installed configuration file if none is specified
-            if not self.config_file:
+            # Load the default installed configuration file if no directory is specified
+            if not self.config_directory:
                 config_filename = os.path.join(os.path.dirname(__file__) + "/config", "extractor_config.json")
             # Otherwise, load the specified configuration file
             else:
-                config_filename = self.config_file
+                config_filename = os.path.join(self.config_directory, "extractor_config.json")
             with open(config_filename, mode='r') as f:
                 self.config_dict = json.loads(f.read())
         except EnvironmentError:

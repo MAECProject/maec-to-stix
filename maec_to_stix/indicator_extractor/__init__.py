@@ -22,7 +22,7 @@ from indicator_filter import IndicatorFilter
 from config_parser import ConfigParser
 
 class IndicatorExtractor(object):
-    def __init__(self, maec_package, file_name=None, config_file=None):
+    def __init__(self, maec_package, file_name=None, config_directory=None):
         # The input MAEC Package
         self.maec_package = maec_package
         # The output STIX Package (with Indicators)
@@ -30,7 +30,7 @@ class IndicatorExtractor(object):
         # The input file name
         self.file_name = file_name
         # Parsed configuration structure
-        self.config = ConfigParser(config_file=config_file)
+        self.config = ConfigParser(config_directory=config_directory)
         # Set the STIX namespace and alias
         stix.utils.set_id_namespace({'https://github.com/MAECProject/maec-to-stix' : 'maecToSTIX'})
         # Set the MAEC namespace and alias
