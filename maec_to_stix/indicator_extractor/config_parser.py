@@ -25,6 +25,7 @@ class ConfigParser(object):
                 1. The general Indicator extraction parameters (from config/extractor_config.json)
                 2. The supported Actions (derived from all of the parsed JSON configuration files)
                 3. The supported Objects and their properties (derived from all of the parsed JSON configuration files)
+                4. The contra-indicators and modifiers to use in candidate Object filtering
         """
         # Print the general parameters
         print "\n[Configuration Parameters]"
@@ -35,6 +36,10 @@ class ConfigParser(object):
                 print str(" {0}").format(key)
                 for embedded_key, embedded_value in value.items():
                     print str("   {0} : {1}").format(embedded_key,embedded_value)
+            elif isinstance(value, list):
+                print str(" {0}").format(key)
+                for embedded_value in value:
+                    print str("   {0}").format(embedded_value)
         # Print the supported Actions
         print "\n[Supported Actions]"
         for action_name in sorted(self.supported_actions):

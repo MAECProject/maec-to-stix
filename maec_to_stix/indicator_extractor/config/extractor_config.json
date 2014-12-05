@@ -7,5 +7,7 @@
 						 "process_activity":false,
 						 "network_activity":true,
 						 "service_activity":false,
-						 "driver_activity":false}
+						 "driver_activity":false},
+  "contraindicators": ["delete", "kill"],
+  "modifiers": ["move", "copy", "rename"]
 }

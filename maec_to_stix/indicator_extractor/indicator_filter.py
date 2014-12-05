@@ -10,14 +10,6 @@ class IndicatorFilter(object):
     def __init__(self, config):
         # The parsed configuration structure
         self.config = config
-        # A list of action terms that indicate that the Object may no longer 
-        # be present after the execution of the malware
-        # E.g. that a particular file may be deleted
-        self.contraindicators = ["delete", "kill"]
-        # A list of action terms that indicate that the state of the Object
-        # may have been changed in some way that would render it undetectable. 
-        # Primarily applicable to files (?).
-        self.modifiers = ["move", "copy", "rename"]
 
     def _contraindicator_check(self, object_history_entry):
         """Check an Object for Action-based contraindicators that may render it
@@ -33,11 +25,11 @@ class IndicatorFilter(object):
             association_type = context_entry[1]
             # Check for the contraindicators and modifiers
             if action_name and association_type:
-                for contraind in self.contraindicators:
+                for contraind in self.config.config_dict["contraindicators"]:
                     if contraind in action_name:
                         contraindication = True
                         break
-                for modifier in self.modifiers:
+                for modifier in self.config.config_dict["modifiers"]:
                     if modifier in action_name and association_type == "input":
                         contraindication = True
                         break
