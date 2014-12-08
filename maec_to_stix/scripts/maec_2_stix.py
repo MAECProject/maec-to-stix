@@ -14,10 +14,12 @@
 
 # MAEC to STIX Converter Script
 # Copyright 2014, MITRE Corp
-# Updated 12/04/2014
+# Updated 12/08/2014
 
+import warnings
 import argparse
-from maec_to_stix import __version__, wrap_maec_package, extract_indicators
+from maec_to_stix import (__version__, wrap_maec_package, extract_indicators,
+                          _custom_formatwarning)
 from maec_to_stix.indicator_extractor import ConfigParser
 
 def write_stix_package(stix_package, output_file):
@@ -53,6 +55,9 @@ def main():
         stix_package = extract_indicators(args.infile, args.config_directory)
         if stix_package:
             write_stix_package(stix_package, args.outfile)
+        else:
+            warnings.formatwarning = _custom_formatwarning
+            warnings.warn("No STIX Package created.", UserWarning)
     # Print the Indicator extraction configuration options
     elif args.print_options:
         config_parser = ConfigParser(args.config_directory)

@@ -3,7 +3,7 @@
 
 import warnings
 import maec.utils
-import maec_to_stix
+from maec_to_stix import __version__
 from maec.package.package import Package
 from maec.package.malware_subject import MalwareSubject
 from maec.bundle.bundle import Bundle, ObjectList, ActionList
@@ -143,7 +143,7 @@ class IndicatorExtractor(object):
         tool_info = ToolInformation()
         stix_header.information_source = InformationSource()
         tool_info.name = "MAEC to STIX"
-        tool_info.version = str(maec_to_stix.__version__)
+        tool_info.version = str(__version__)
         stix_header.information_source.tools = ToolInformationList(tool_info)
         stix_package.stix_header = stix_header
         return stix_package
@@ -307,8 +307,10 @@ class IndicatorExtractor(object):
         """
         self._parse_package()
 
-        if self.stix_package.indicators:
+        if self.stix_package and self.stix_package.indicators:
             return self.stix_package
         else:
-            warnings.warn("No STIX Indicators extracted from MAEC Package", UserWarning)
+            from maec_to_stix import _custom_formatwarning
+            warnings.formatwarning = _custom_formatwarning
+            warnings.warn("No STIX Indicators extracted from MAEC Package.", UserWarning)
             return None

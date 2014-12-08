@@ -7,6 +7,11 @@ import maec
 from maec_to_stix.stix_wrapper import wrap_maec
 from maec_to_stix.indicator_extractor import IndicatorExtractor
 
+def _custom_formatwarning(msg, *a):
+    """Print a custom-formatted warning message."""
+    # Ignore everything except the message
+    return "Warning: " + str(msg) + '\n'
+
 def wrap_maec_package(package_filename):
     """Wrap a MAEC Package file in a STIX Package/TTP.
     
