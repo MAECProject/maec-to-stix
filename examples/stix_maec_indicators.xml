@@ -1,0 +1,493 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<stix:STIX_Package 
+	xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
+	xmlns:cybox="http://cybox.mitre.org/cybox-2"
+	xmlns:cyboxVocabs="http://cybox.mitre.org/default_vocabularies-2"
+	xmlns:FileObj="http://cybox.mitre.org/objects#FileObject-2"
+	xmlns:URIObj="http://cybox.mitre.org/objects#URIObject-2"
+	xmlns:WinExecutableFileObj="http://cybox.mitre.org/objects#WinExecutableFileObject-2"
+	xmlns:WinFileObj="http://cybox.mitre.org/objects#WinFileObject-2"
+	xmlns:WinRegistryKeyObj="http://cybox.mitre.org/objects#WinRegistryKeyObject-2"
+	xmlns:maecPackage="http://maec.mitre.org/XMLSchema/maec-package-2"
+	xmlns:maecVocabs="http://maec.mitre.org/default_vocabularies-1"
+	xmlns:indicator="http://stix.mitre.org/Indicator-2"
+	xmlns:ttp="http://stix.mitre.org/TTP-1"
+	xmlns:stixCommon="http://stix.mitre.org/common-1"
+	xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1"
+	xmlns:stix-maec="http://stix.mitre.org/extensions/Malware#MAEC4.1-1"
+	xmlns:stix="http://stix.mitre.org/stix-1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:maecToSTIX="https://github.com/MAECProject/maec-to-stix"
+	xsi:schemaLocation="
+	http://cybox.mitre.org/common-2 http://cybox.mitre.org/XMLSchema/common/2.1/cybox_common.xsd
+	http://cybox.mitre.org/cybox-2 http://cybox.mitre.org/XMLSchema/core/2.1/cybox_core.xsd
+	http://cybox.mitre.org/default_vocabularies-2 http://cybox.mitre.org/XMLSchema/default_vocabularies/2.1/cybox_default_vocabularies.xsd
+	http://cybox.mitre.org/objects#FileObject-2 http://cybox.mitre.org/XMLSchema/objects/File/2.1/File_Object.xsd
+	http://cybox.mitre.org/objects#URIObject-2 http://cybox.mitre.org/XMLSchema/objects/URI/2.1/URI_Object.xsd
+	http://cybox.mitre.org/objects#WinExecutableFileObject-2 http://cybox.mitre.org/XMLSchema/objects/Win_Executable_File/2.1/Win_Executable_File_Object.xsd
+	http://cybox.mitre.org/objects#WinFileObject-2 http://cybox.mitre.org/XMLSchema/objects/Win_File/2.1/Win_File_Object.xsd
+	http://cybox.mitre.org/objects#WinRegistryKeyObject-2 http://cybox.mitre.org/XMLSchema/objects/Win_Registry_Key/2.1/Win_Registry_Key_Object.xsd
+	http://maec.mitre.org/XMLSchema/maec-package-2 http://maec.mitre.org/language/version4.1/maec_package_schema.xsd
+	http://maec.mitre.org/default_vocabularies-1 http://maec.mitre.org/language/version4.1/maec_default_vocabularies.xsd
+	http://stix.mitre.org/Indicator-2 http://stix.mitre.org/XMLSchema/indicator/2.1.1/indicator.xsd
+	http://stix.mitre.org/TTP-1 http://stix.mitre.org/XMLSchema/ttp/1.1.1/ttp.xsd
+	http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.1.1/stix_common.xsd
+	http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.1.1/stix_default_vocabularies.xsd
+	http://stix.mitre.org/extensions/Malware#MAEC4.1-1 http://stix.mitre.org/XMLSchema/extensions/malware/maec_4.1/1.0.1/maec_4.1_malware.xsd
+	http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.1.1/stix_core.xsd" id="maecToSTIX:Package-9c615551-6cb1-429c-8a17-6d174d124740" version="1.1.1" timestamp="2014-12-08T19:43:04.098000+00:00">
+    <stix:STIX_Header>
+        <stix:Title>STIX Indicators extracted from MAEC file: 2995fe11dedb42a1abc1a0e5ef20c7ef_threatexpert_maec.xml</stix:Title>
+        <stix:Package_Intent xsi:type="stixVocabs:PackageIntentVocab-1.0">Indicators - Malware Artifacts</stix:Package_Intent>
+        <stix:Information_Source>
+            <stixCommon:Tools>
+                <cyboxCommon:Tool>
+                    <cyboxCommon:Name>MAEC to STIX</cyboxCommon:Name>
+                    <cyboxCommon:Version>1.0.0-alpha1</cyboxCommon:Version>
+                </cyboxCommon:Tool>
+            </stixCommon:Tools>
+        </stix:Information_Source>
+    </stix:STIX_Header>
+    <stix:Indicators>
+        <stix:Indicator id="maecToSTIX:indicator-9a464e79-896e-4274-b50b-c4f5191102d6" timestamp="2014-12-08T19:43:04.138000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): modify registry key, modify registry key</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-50ad7760-d18c-4f44-a368-7553176c0fb1">
+                <cybox:Object id="maecToSTIX:Object-cd5f1885-5032-4a91-98a9-f2a50528b076">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_USERS</WinRegistryKeyObj:Hive>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.138000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-0f28076d-d5c5-4211-9c66-7413e2028280" timestamp="2014-12-08T19:43:04.138000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create registry key</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-1052ad26-a7a5-4508-a3d3-040db94dac72">
+                <cybox:Object id="maecToSTIX:Object-bb2c64ac-db5c-4c33-a30f-398144ff05f5">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\{334613DB-50C1-B3BE-95ED-E9915A134FF1}</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_USERS</WinRegistryKeyObj:Hive>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.138000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-5888ca58-8027-4de4-aa93-fce3c120ea24" timestamp="2014-12-08T19:43:04.139000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create registry key</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-a200a369-1369-4893-b0e1-e6381b3f2d2f">
+                <cybox:Object id="maecToSTIX:Object-3a55287e-e0c0-41f9-9f81-39df1d301bd4">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\{43BF8CD1-C5D5-2230-7BB2-98F22C2B7DC6}</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_USERS</WinRegistryKeyObj:Hive>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.139000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-07e320f5-ce38-4121-a5a6-4516a7b1634a" timestamp="2014-12-08T19:43:04.139000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create registry key</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-9ec3b74e-a1c9-443a-9f81-d7e8268db680">
+                <cybox:Object id="maecToSTIX:Object-85b7d1c2-8015-469b-9fea-eb8b3643fc38">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">.DEFAULT\Software\Microsoft\Protected Storage System Provider</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_USERS</WinRegistryKeyObj:Hive>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.139000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-72d4b74f-e5ac-41b3-a736-ef3a80451590" timestamp="2014-12-08T19:43:04.139000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create registry key value</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-95cddb4a-0a6c-45b7-9fe9-9d63715b2b97">
+                <cybox:Object id="maecToSTIX:Object-29633cd9-94c2-4f47-86e4-21c6b971c3a6">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">SOFTWARE\Microsoft\Windows NT\CurrentVersion\Network</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_LOCAL_MACHINE</WinRegistryKeyObj:Hive>
+                        <WinRegistryKeyObj:Values>
+                            <WinRegistryKeyObj:Value>
+                                <WinRegistryKeyObj:Name condition="Equals">UID</WinRegistryKeyObj:Name>
+                                <WinRegistryKeyObj:Data condition="Equals">%ComputerName%_0001CCA1</WinRegistryKeyObj:Data>
+                            </WinRegistryKeyObj:Value>
+                        </WinRegistryKeyObj:Values>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.140000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-c86a9410-1aa0-4d80-9d16-0973b75ae805" timestamp="2014-12-08T19:43:04.140000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create registry key value</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-8dff7a55-d35e-4311-90c2-3140b1a2ac25">
+                <cybox:Object id="maecToSTIX:Object-7c29420c-158f-4ab4-b5cb-d588e4add31f">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\{334613DB-50C1-B3BE-95ED-E9915A134FF1}</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_USERS</WinRegistryKeyObj:Hive>
+                        <WinRegistryKeyObj:Values>
+                            <WinRegistryKeyObj:Value>
+                                <WinRegistryKeyObj:Name condition="Equals">{3039636B-5F3D-6C64-6675-696870667265}</WinRegistryKeyObj:Name>
+                                <WinRegistryKeyObj:Data condition="Equals">F7 09 F2 0D</WinRegistryKeyObj:Data>
+                            </WinRegistryKeyObj:Value>
+                        </WinRegistryKeyObj:Values>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.140000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-86ea54bf-b93d-4e79-86a5-35e453fcbcd7" timestamp="2014-12-08T19:43:04.140000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create registry key value</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-4ae4e05b-5742-45ed-894f-277b8d98e22a">
+                <cybox:Object id="maecToSTIX:Object-1517ff78-2094-43f8-a341-f4dc7b90c398">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\{334613DB-50C1-B3BE-95ED-E9915A134FF1}</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_USERS</WinRegistryKeyObj:Hive>
+                        <WinRegistryKeyObj:Values>
+                            <WinRegistryKeyObj:Value>
+                                <WinRegistryKeyObj:Name condition="Equals">{33373039-3132-3864-6B30-303233343434}</WinRegistryKeyObj:Name>
+                                <WinRegistryKeyObj:Data condition="Equals">47 09 F2 0D</WinRegistryKeyObj:Data>
+                            </WinRegistryKeyObj:Value>
+                        </WinRegistryKeyObj:Values>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.140000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-3f7aa392-070f-4a0f-8d10-defade00a719" timestamp="2014-12-08T19:43:04.141000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create registry key value</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-023e2918-7777-42b6-91d8-a93cd47ecda2">
+                <cybox:Object id="maecToSTIX:Object-ea89e377-b72f-41e6-891f-4e1c5b59dce0">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\{43BF8CD1-C5D5-2230-7BB2-98F22C2B7DC6}</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_USERS</WinRegistryKeyObj:Hive>
+                        <WinRegistryKeyObj:Values>
+                            <WinRegistryKeyObj:Value>
+                                <WinRegistryKeyObj:Name condition="Equals">{3039636B-5F3D-6C64-6675-696870667265}</WinRegistryKeyObj:Name>
+                                <WinRegistryKeyObj:Data condition="Equals">F7 09 F2 0D</WinRegistryKeyObj:Data>
+                            </WinRegistryKeyObj:Value>
+                        </WinRegistryKeyObj:Values>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.141000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-ed52ebbf-19de-4182-858d-9806126380c4" timestamp="2014-12-08T19:43:04.142000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create registry key value</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-0cfe6d49-2af5-4776-9464-16bf1107fef2">
+                <cybox:Object id="maecToSTIX:Object-d374af89-1f3b-4de6-b503-bc1360fed98f">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Explorer\{43BF8CD1-C5D5-2230-7BB2-98F22C2B7DC6}</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_USERS</WinRegistryKeyObj:Hive>
+                        <WinRegistryKeyObj:Values>
+                            <WinRegistryKeyObj:Value>
+                                <WinRegistryKeyObj:Name condition="Equals">{33373039-3132-3864-6B30-303233343434}</WinRegistryKeyObj:Name>
+                                <WinRegistryKeyObj:Data condition="Equals">47 09 F2 0D</WinRegistryKeyObj:Data>
+                            </WinRegistryKeyObj:Value>
+                        </WinRegistryKeyObj:Values>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.142000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-db33592f-39fe-4fa6-9212-6f20bd84c0c3" timestamp="2014-12-08T19:43:04.142000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create registry key value</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-0dc23827-bba6-4f6f-9275-56ee2df00654">
+                <cybox:Object id="maecToSTIX:Object-a12d21d5-8e4e-4182-925d-349e6006ba29">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_USERS</WinRegistryKeyObj:Hive>
+                        <WinRegistryKeyObj:Values>
+                            <WinRegistryKeyObj:Value>
+                                <WinRegistryKeyObj:Name condition="Equals">ProxyEnable</WinRegistryKeyObj:Name>
+                                <WinRegistryKeyObj:Data condition="Equals">0x00000000</WinRegistryKeyObj:Data>
+                            </WinRegistryKeyObj:Value>
+                        </WinRegistryKeyObj:Values>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.142000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-9ca783d8-75dd-418c-8499-25bca9d288a3" timestamp="2014-12-08T19:43:04.143000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): modify registry key</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-b0411d46-fa4f-43b2-9e45-fd952ce1d9b6">
+                <cybox:Object id="maecToSTIX:Object-a1eb0fc1-4acd-4f92-81d9-f633aa3a8414">
+                    <cybox:Properties xsi:type="WinRegistryKeyObj:WindowsRegistryKeyObjectType">
+                        <WinRegistryKeyObj:Key condition="Equals">SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon</WinRegistryKeyObj:Key>
+                        <WinRegistryKeyObj:Hive condition="Equals">HKEY_LOCAL_MACHINE</WinRegistryKeyObj:Hive>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.143000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-c714801f-f22b-4170-b60e-62f64d9b3d31" timestamp="2014-12-08T19:43:04.144000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create file</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-5bd1d715-8949-46ec-8e9f-f53c60d28e0e">
+                <cybox:Object id="maecToSTIX:Object-53f3c82d-6e9f-4276-af00-ceb8d5e57395">
+                    <cybox:Properties xsi:type="FileObj:FileObjectType">
+                        <FileObj:File_Path condition="Equals">CSIDL_SYSTEM\sdra64.exe</FileObj:File_Path>
+                        <FileObj:Hashes>
+                            <cyboxCommon:Hash>
+                                <cyboxCommon:Type condition="Equals" xsi:type="cyboxVocabs:HashNameVocab-1.0">MD5</cyboxCommon:Type>
+                                <cyboxCommon:Simple_Hash_Value condition="Equals">18404AD182141B00C11993255D6C5D3F</cyboxCommon:Simple_Hash_Value>
+                            </cyboxCommon:Hash>
+                            <cyboxCommon:Hash>
+                                <cyboxCommon:Type condition="Equals" xsi:type="cyboxVocabs:HashNameVocab-1.0">SHA1</cyboxCommon:Type>
+                                <cyboxCommon:Simple_Hash_Value condition="Equals">02ED1C86F7CDF56BF0A48EEAB2EFA75424C4472F</cyboxCommon:Simple_Hash_Value>
+                            </cyboxCommon:Hash>
+                        </FileObj:Hashes>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.144000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-522dede3-b7d8-4a89-9617-1f82eb3fbef4" timestamp="2014-12-08T19:43:04.144000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create file</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-071c44f0-9f37-430c-8cd6-93907bab5697">
+                <cybox:Object id="maecToSTIX:Object-c0224f74-8b0f-407a-9703-fb7886aa3a02">
+                    <cybox:Properties xsi:type="FileObj:FileObjectType">
+                        <FileObj:File_Path condition="Equals">CSIDL_SYSTEM\lowsec\local.ds</FileObj:File_Path>
+                        <FileObj:Hashes>
+                            <cyboxCommon:Hash>
+                                <cyboxCommon:Type condition="Equals" xsi:type="cyboxVocabs:HashNameVocab-1.0">MD5</cyboxCommon:Type>
+                                <cyboxCommon:Simple_Hash_Value condition="Equals">D41D8CD98F00B204E9800998ECF8427E</cyboxCommon:Simple_Hash_Value>
+                            </cyboxCommon:Hash>
+                            <cyboxCommon:Hash>
+                                <cyboxCommon:Type condition="Equals" xsi:type="cyboxVocabs:HashNameVocab-1.0">SHA1</cyboxCommon:Type>
+                                <cyboxCommon:Simple_Hash_Value condition="Equals">DA39A3EE5E6B4B0D3255BFEF95601890AFD80709</cyboxCommon:Simple_Hash_Value>
+                            </cyboxCommon:Hash>
+                        </FileObj:Hashes>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.144000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-e0f3cf78-f1f3-4902-a7d6-8f253f912b4a" timestamp="2014-12-08T19:43:04.145000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create file</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-845597e1-7d29-4237-b79a-5f5c9647b228">
+                <cybox:Object id="maecToSTIX:Object-4243560e-4e6a-4561-b023-6759828cc286">
+                    <cybox:Properties xsi:type="FileObj:FileObjectType">
+                        <FileObj:File_Path condition="Equals">CSIDL_SYSTEM\lowsec\user.ds</FileObj:File_Path>
+                        <FileObj:Hashes>
+                            <cyboxCommon:Hash>
+                                <cyboxCommon:Type condition="Equals" xsi:type="cyboxVocabs:HashNameVocab-1.0">MD5</cyboxCommon:Type>
+                                <cyboxCommon:Simple_Hash_Value condition="Equals">D41D8CD98F00B204E9800998ECF8427E</cyboxCommon:Simple_Hash_Value>
+                            </cyboxCommon:Hash>
+                            <cyboxCommon:Hash>
+                                <cyboxCommon:Type condition="Equals" xsi:type="cyboxVocabs:HashNameVocab-1.0">SHA1</cyboxCommon:Type>
+                                <cyboxCommon:Simple_Hash_Value condition="Equals">DA39A3EE5E6B4B0D3255BFEF95601890AFD80709</cyboxCommon:Simple_Hash_Value>
+                            </cyboxCommon:Hash>
+                        </FileObj:Hashes>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.145000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-f5e11afd-51f6-4a48-8897-e708c10c310b" timestamp="2014-12-08T19:43:04.146000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): create file</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-0ee7e906-f7cc-4c25-9509-3824540ebc53">
+                <cybox:Object id="maecToSTIX:Object-4d4ca1d2-c0bf-4bde-bda5-5ec88fe71de6">
+                    <cybox:Properties xsi:type="FileObj:FileObjectType">
+                        <FileObj:File_Path condition="Equals">CSIDL_SYSTEM\lowsec\user.ds.lll</FileObj:File_Path>
+                        <FileObj:Hashes>
+                            <cyboxCommon:Hash>
+                                <cyboxCommon:Type condition="Equals" xsi:type="cyboxVocabs:HashNameVocab-1.0">MD5</cyboxCommon:Type>
+                                <cyboxCommon:Simple_Hash_Value condition="Equals">6C9E7D101DBB8EDFE23B742D79930DC8</cyboxCommon:Simple_Hash_Value>
+                            </cyboxCommon:Hash>
+                            <cyboxCommon:Hash>
+                                <cyboxCommon:Type condition="Equals" xsi:type="cyboxVocabs:HashNameVocab-1.0">SHA1</cyboxCommon:Type>
+                                <cyboxCommon:Simple_Hash_Value condition="Equals">377EF1F41DFAAEBC223A0EF6B11B1811EC516CC2</cyboxCommon:Simple_Hash_Value>
+                            </cyboxCommon:Hash>
+                        </FileObj:Hashes>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.146000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-8ba1078d-8926-4802-a7d6-27c37a8492a9" timestamp="2014-12-08T19:43:04.147000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): connect to url</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-5d7a60a4-a1b8-4644-aec0-d113d9e5b031">
+                <cybox:Object id="maecToSTIX:Object-755d8cbc-6319-4761-9a59-47ce53882a73">
+                    <cybox:Properties xsi:type="URIObj:URIObjectType">
+                        <URIObj:Value condition="Equals">http://62.193.242.95/xenix/alert1of1sun.bin</URIObj:Value>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.147000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+        <stix:Indicator id="maecToSTIX:indicator-e3c4a175-8ae9-438a-87dd-53454b3abcec" timestamp="2014-12-08T19:43:04.148000+00:00" xsi:type='indicator:IndicatorType'>
+            <indicator:Title>Malware Artifact Extracted from MAEC Document</indicator:Title>
+            <indicator:Type xsi:type="stixVocabs:IndicatorTypeVocab-1.1">Malware Artifacts</indicator:Type>
+            <indicator:Description>Corresponding Action(s): connect to url</indicator:Description>
+            <indicator:Observable id="maecToSTIX:Observable-a5a068ea-2915-4072-a2da-fc0ead62b69f">
+                <cybox:Object id="maecToSTIX:Object-e9c627a6-7a76-42a1-a8b0-74b653ca0fb0">
+                    <cybox:Properties xsi:type="URIObj:URIObjectType">
+                        <URIObj:Value condition="Equals">http://62.193.242.95/xenix/ip.php</URIObj:Value>
+                    </cybox:Properties>
+                </cybox:Object>
+            </indicator:Observable>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" xsi:type='ttp:TTPType'/>
+            </indicator:Indicated_TTP>
+            <indicator:Confidence timestamp="2014-12-08T19:43:04.148000+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+                <stixCommon:Description>Tool-generated Indicator. It is HIGHLY recommended that it be vetted by a human analyst before usage.</stixCommon:Description>
+            </indicator:Confidence>
+        </stix:Indicator>
+    </stix:Indicators>
+    <stix:TTPs>
+        <stix:TTP id="maecToSTIX:ttp-c13e240e-db68-48c8-92a2-5063f3e13c69" timestamp="2014-12-08T19:43:04.098000+00:00" xsi:type='ttp:TTPType'>
+            <ttp:Behavior>
+                <ttp:Malware>
+                    <ttp:Malware_Instance xsi:type='stix-maec:MAEC4.1InstanceType'>
+                        <stix-maec:MAEC id="maecToSTIX:package-04b2e83a-f7ce-4bcc-8f98-94a638a4a151" schema_version="2.1">
+                            <maecPackage:Malware_Subjects>
+                                <maecPackage:Malware_Subject id="maecToSTIX:malware_subject-7e0dc94e-8595-4bfa-949c-27116944d992">
+                                    <maecPackage:Malware_Instance_Object_Attributes id="maec-threatexpert_to_maec_2995FE11DEDB42A1ABC1A0E5EF20C7EF-obj-1">
+                                        <cybox:Properties xsi:type="WinExecutableFileObj:WindowsExecutableFileObjectType">
+                                            <FileObj:Size_In_Bytes>232163</FileObj:Size_In_Bytes>
+                                            <FileObj:Hashes>
+                                                <cyboxCommon:Hash>
+                                                    <cyboxCommon:Type>MD5</cyboxCommon:Type>
+                                                    <cyboxCommon:Simple_Hash_Value>2995FE11DEDB42A1ABC1A0E5EF20C7EF</cyboxCommon:Simple_Hash_Value>
+                                                </cyboxCommon:Hash>
+                                                <cyboxCommon:Hash>
+                                                    <cyboxCommon:Type>SHA1</cyboxCommon:Type>
+                                                    <cyboxCommon:Simple_Hash_Value>10881635FE636A11E49C7A7429A24BAB469364C5</cyboxCommon:Simple_Hash_Value>
+                                                </cyboxCommon:Hash>
+                                            </FileObj:Hashes>
+                                        </cybox:Properties>
+                                    </maecPackage:Malware_Instance_Object_Attributes>
+                                </maecPackage:Malware_Subject>
+                            </maecPackage:Malware_Subjects>
+                        </stix-maec:MAEC>
+                    </ttp:Malware_Instance>
+                </ttp:Malware>
+            </ttp:Behavior>
+        </stix:TTP>
+    </stix:TTPs>
+</stix:STIX_Package>
