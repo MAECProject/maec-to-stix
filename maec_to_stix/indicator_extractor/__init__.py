@@ -1,6 +1,7 @@
 # Copyright (c) 2014, The MITRE Corporation. All rights reserved.
 # See LICENSE.txt for complete terms.
 
+import warnings
 import maec.utils
 import maec_to_stix
 from maec.package.package import Package
@@ -47,10 +48,8 @@ class IndicatorExtractor(object):
         stix.utils.set_id_namespace({'https://github.com/MAECProject/maec-to-stix' : 'maecToSTIX'})
         # Set the MAEC namespace and alias
         maec.utils.set_id_namespace(cybox.utils.Namespace('https://github.com/MAECProject/maec-to-stix' , 'maecToSTIX'))
-        # Parse the MAEC Package and perform the STIX Indicator extraction
-        self.parse_package()
 
-    def add_stix_ttp(self, malware_subject):
+    def _add_stix_ttp(self, malware_subject):
         """Create and add a STIX TTP for a MAEC Malware Subject.
         Args:
             malware_subject: the ``maec.malware_subject.MalwareSubject`` for which the STIX TTP will be created.
@@ -73,7 +72,7 @@ class IndicatorExtractor(object):
         self.stix_package.add_ttp(ttp)
         return ttp.id_
 
-    def add_stix_indicators(self, final_indicator_objects, ttp_id):
+    def _add_stix_indicators(self, final_indicator_objects, ttp_id):
         """Create and add STIX Indicators for a list of Object History entries. 
         Link each Indicator to their Indicated TTP.
 
@@ -127,7 +126,7 @@ class IndicatorExtractor(object):
             # Add the Indicator to the STIX Package
             self.stix_package.add_indicator(indicator)
         
-    def create_stix_package(self):
+    def _create_stix_package(self):
         """Create and return a STIX Package with the basic information populated.
         
         Returns:
@@ -149,7 +148,7 @@ class IndicatorExtractor(object):
         stix_package.stix_header = stix_header
         return stix_package
 
-    def set_object_property(self, property, condition="Equals"):
+    def _set_object_property(self, property, condition="Equals"):
         """Add a condition to an Object property and all of its children.
         
         Args:
@@ -167,13 +166,13 @@ class IndicatorExtractor(object):
         elif isinstance(property, dict):
             if 'condition' not in property and 'required' not in property:
                 for key, value in property.items():
-                    property[key] = self.set_object_property(value, condition)
+                    property[key] = self._set_object_property(value, condition)
         elif isinstance(property, list):
             for item in property:
-                self.set_object_property(item, condition)
+                self._set_object_property(item, condition)
         return property
 
-    def prepare_objects(self, final_indicator_objects):
+    def _prepare_objects(self, final_indicator_objects):
         """Prepare the final Indicator Objects for translation into STIX Indicators.
         Set their condition attributes as appropriate.
 
@@ -187,11 +186,11 @@ class IndicatorExtractor(object):
             object_properties_dict = object.properties.to_dict()
             updated_properties_dict = {}
             for property_name, property_value in object_properties_dict.items():
-                updated_properties_dict[property_name] = self.set_object_property(property_value)
+                updated_properties_dict[property_name] = self._set_object_property(property_value)
             updated_properties_dict['xsi:type'] = object_xsi_type
             object.properties = ObjectProperties.from_dict(updated_properties_dict)
 
-    def parse_object_history(self, object_history):
+    def _parse_object_history(self, object_history):
         """Parse the Object History to build the list of candidate Objects for use in Indicators.
            
         Args:
@@ -219,7 +218,7 @@ class IndicatorExtractor(object):
                 candidate_indicator_objects.append(entry)
         return candidate_indicator_objects
 
-    def create_bundle_indicators(self, object_history, ttp_id):
+    def _create_bundle_indicators(self, object_history, ttp_id):
         """Create STIX Indicators from the contents of a MAEC Bundle.
         Add them to the previously created STIX Package.
 
@@ -240,17 +239,17 @@ class IndicatorExtractor(object):
                 MAEC Bundle.
         """
         # Parse the object history to build the list of candidate Objects
-        candidate_indicator_objects = self.parse_object_history(object_history)
+        candidate_indicator_objects = self._parse_object_history(object_history)
         # Instantiate the indicator filter
         indicator_filter = IndicatorFilter(self.config)
         # Prune the candidate objects
         pruned_indicator_objects = indicator_filter.prune_objects(candidate_indicator_objects)
         # Prepare the candidate objects for Indicatorization (TM)
-        self.prepare_objects(pruned_indicator_objects)
+        self._prepare_objects(pruned_indicator_objects)
         # Create and add the STIX Indicators for each of the final candidate indicator Objects
-        self.add_stix_indicators(pruned_indicator_objects, ttp_id)
+        self._add_stix_indicators(pruned_indicator_objects, ttp_id)
 
-    def parse_bundle(self, bundle, ttp_id):
+    def _parse_bundle(self, bundle, ttp_id):
         """Pre-process and parse a MAEC Bundle for STIX Indicator extraction.
 
         Note:
@@ -272,9 +271,9 @@ class IndicatorExtractor(object):
         object_history = ObjectHistory()
         object_history.build(bundle)
         # Create the actual Indicators derived from the Bundle
-        self.create_bundle_indicators(object_history, ttp_id)
+        self._create_bundle_indicators(object_history, ttp_id)
 
-    def parse_malware_subject(self, malware_subject):
+    def _parse_malware_subject(self, malware_subject):
         """Parse a MAEC Malware Subject for STIX Indicator extraction.
         
         Args:
@@ -285,19 +284,31 @@ class IndicatorExtractor(object):
         if malware_subject.findings_bundles and malware_subject.findings_bundles.bundle:
             # Create the STIX Package if it does not exist yet
             if not self.stix_package:
-                self.stix_package = self.create_stix_package()
+                self.stix_package = self._create_stix_package()
             # Create and add the STIX TTP for the Malware Subject
-            ttp_id = self.add_stix_ttp(malware_subject)
+            ttp_id = self._add_stix_ttp(malware_subject)
             for bundle in malware_subject.findings_bundles.bundle:
-                self.parse_bundle(bundle, ttp_id)
+                self._parse_bundle(bundle, ttp_id)
 
-    def parse_package(self):
+    def _parse_package(self):
         """Parse a MAEC Package for STIX Indicator extraction."""
         if self.maec_package.malware_subjects:
             for malware_subject in self.maec_package.malware_subjects:
-                self.parse_malware_subject(malware_subject)
+                self._parse_malware_subject(malware_subject)
 
     def extract(self):
-        """Extract STIX Indicators from the input MAEC Package.
+        """Attempt to extract STIX Indicators from the provided MAEC Package using
+        the specified configuration.
         
+        Returns:
+            If indicators were extracted, a ``stix.STIXPackage`` instance with the 
+            extracted STIX Indicators. Otherwise, if no indicators were extracted,
+            ``None``.
         """
+        self._parse_package()
+
+        if self.stix_package.indicators:
+            return self.stix_package
+        else:
+            warnings.warn("No STIX Indicators extracted from MAEC Package", UserWarning)
+            return None

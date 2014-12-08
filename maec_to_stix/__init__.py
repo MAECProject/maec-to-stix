@@ -31,10 +31,12 @@ def extract_indicators(package_filename, config_directory=None):
     Args:
         package_filename: The name of the MAEC Package file to extract indicators from.
         config_directory: (optional) The path to the directory housing the indicator 
-        extraction configuration files.
+            extraction configuration files. 
 
     Returns:
-        A ``stix.STIXPackage`` instance with the extracted STIX Indicators.
+        If indicators were extracted, a ``stix.STIXPackage`` instance with the 
+        extracted STIX Indicators. Otherwise, if no indicators were extracted,
+        ``None``.
     
     """
     # Parse the input MAEC Package
@@ -42,5 +44,5 @@ def extract_indicators(package_filename, config_directory=None):
 
     # Extract the STIX Indicators from the MAEC Package
     indicator_extractor = IndicatorExtractor(maec_package, package_filename, config_directory)
-    
-    return indicator_extractor.stix_package
+
+    return indicator_extractor.extract()
