@@ -34,7 +34,7 @@ The maec-to-stix library depends on the presence of certain packages/libraries
 to function. Please refer to their installation documentation for installation
 instructions.
 
--  `python-maec >=4.1.0.8 and <= 4.2.0.0 <https://github.com/MAECProject/python-maec>`_
+-  `python-maec >=4.1.0.9 and <= 4.2.0.0 <https://github.com/MAECProject/python-maec>`_
 -  `python-stix >=1.1.1.2 and <= 1.2.0.0. <https://github.com/STIXProject/python-stix>`_
 -  `python-cybox >=2.1.0.8 and <= 2.2.0.0. <https://github.com/STIXProject/python-stix>`_
 
