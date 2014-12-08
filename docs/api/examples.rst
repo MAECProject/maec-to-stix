@@ -3,7 +3,7 @@ Example Code
 
 The following sections demonstrate how to use the **maec-to-stix** library to
 wrap MAEC content in STIX and also extract STIX Indicators from MAEC.
-For more details about the **maec-to-stix**** API, see the :doc:`/api/index` page.
+For more details about the **maec-to-stix** API, see the :doc:`/api/index` page.
 
 Import maec-to-stix
 ^^^^^^^^^^^^^^^^^^^
@@ -35,7 +35,7 @@ which parses the input MAEC Package, wraps it in STIX, and returns an instance o
 
     The :meth:`maec_to_stix.wrap_maec_package` method expects a filename to be passed in.
 	For passing in `maec.Package` objects directly, please see the :doc:`/api/stix_wrapper/index` 
-	page.
+	documentation.
 
 Extracting STIX Indicators from MAEC Content
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -57,4 +57,4 @@ attempts to extract STIX Indicators from it, and returns an instance of a
 
     The :meth:`maec_to_stix.extract_indicators` method expects a filename to be passed in.
 	For passing in `maec.Package` objects directly, please see the :doc:`/api/indicator_extractor/index` 
-	page.
+	documentation.

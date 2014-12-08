@@ -23,7 +23,16 @@ Contents
    installation
    getting_started
 
+Indicator Extraction
+====================
 
+.. toctree::
+   :maxdepth: 2
+
+   indicator_extraction/index
+   indicator_extraction/process
+   indicator_extraction/config
+   indicator_extraction/config_files
 
 API Reference
 =============
