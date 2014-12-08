@@ -13,10 +13,12 @@ from lxml import etree
 
 def wrap_maec(maec_package, file_name=None):
     """Wrap a MAEC Package in a STIX TTP/Package. Return the newly created STIX Package.
+
     Args:
         maec_package: the ``maec.package.package.Package`` instance to wrap in STIX.
-        file_name: (optional) the name of the input file from which the MAEC Package originated,
-            to be used in the Title of the STIX TTP that wraps the MAEC Package.
+        file_name: the name of the input file from which the MAEC Package originated,
+            to be used in the Title of the STIX TTP that wraps the MAEC Package. Optional.
+
     Returns:
         A ``stix.STIXPackage`` instance with a single TTP that wraps the input MAEC Package.
     """

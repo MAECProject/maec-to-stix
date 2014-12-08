@@ -22,6 +22,18 @@ from indicator_filter import IndicatorFilter
 from config_parser import ConfigParser
 
 class IndicatorExtractor(object):
+    """Used to extract STIX Indicators from a MAEC Package.
+    
+    Attributes:
+        stix_package: the output STIX Package (with Indicators). An instance of the 
+            ``stix.STIXPackage`` class.
+
+    Args:
+        maec_package: the input MAEC Package, an instance of the ``maec.package.package.Package`` class.
+        file_name: the name of the file that contained the MAEC Package. Optional.
+        config_directory: the path to the directory where the JSON configuration files can be found.
+           Optional. 
+    """
     def __init__(self, maec_package, file_name=None, config_directory=None):
         # The input MAEC Package
         self.maec_package = maec_package
@@ -145,7 +157,7 @@ class IndicatorExtractor(object):
                 calling to_dict() on the Object). Either a string, numerical value,
                 dictionary, or list.
             condition: the particular condition to set on the Object property.
-                Default value is "equals".
+                Default value is "Equals".
 
         Returns:
             The Object property with the set condition.
@@ -284,3 +296,8 @@ class IndicatorExtractor(object):
         if self.maec_package.malware_subjects:
             for malware_subject in self.maec_package.malware_subjects:
                 self.parse_malware_subject(malware_subject)
+
+    def extract(self):
+        """Extract STIX Indicators from the input MAEC Package.
+        
+        """

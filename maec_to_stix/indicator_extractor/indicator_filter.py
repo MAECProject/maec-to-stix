@@ -7,6 +7,14 @@ from cybox.common import ObjectProperties
 from config_parser import ConfigParser
 
 class IndicatorFilter(object):
+    """Used to filter Object History entries through contraindicator checking and
+    required property checking. Also, used to prune any extraneous properties from
+    an Object.
+
+    Args:
+        config: The configuration structure. An instance of :class:`maec_to_stix.indicator_extractor.config_parser.ConfigParser`.
+
+    """
     def __init__(self, config):
         # The parsed configuration structure
         self.config = config

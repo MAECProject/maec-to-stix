@@ -6,6 +6,17 @@ import collections
 import json
 
 class ConfigParser(object):
+    """Used to parse the JSON indicator extraction configuration files. 
+
+    Attributes:
+        config_dict: the parsed dictionary representation of the main configuration
+            file.
+        supported_actions: the list of supported Actions (names).
+        supported_objects: a dictionary of supported Objects and their properties.
+
+    Args:
+        config_directory: the path to the directory where the configuration files can be found.
+    """
     def __init__(self, config_directory=None):
         # The path to the directory where the configuration files can be found
         self.config_directory = config_directory
@@ -19,8 +30,9 @@ class ConfigParser(object):
 
     def print_config(self):
         """Print the current set of configuration parameters to stdout.
-        
-        Note: this method prints detailed information about the parsed Indicator
+
+        Note: 
+            This method prints detailed information about the parsed Indicator
             extraction configuration, including:
                 1. The general Indicator extraction parameters (from config/extractor_config.json)
                 2. The supported Actions (derived from all of the parsed JSON configuration files)
