@@ -1,7 +1,7 @@
 MAEC to STIX Examples
 =====================
 
-The following examples demonstrate the capabilities of**maec-to-stix**,
+The following examples demonstrate the capabilities of **maec-to-stix**,
 including the wrapping of MAEC Package data in a STIX Package, and also
 the extraction of STIX Indicators from a MAEC Package.
 
