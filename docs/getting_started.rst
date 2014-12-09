@@ -48,11 +48,11 @@ Running :code:`maec_2_stix.py -h` displays the following:
 
       optional arguments:
         -h, --help            show this help message and exit
-        -infile INFILE, -i INFILE
+        --infile INFILE, -i INFILE
                               the name of the input MAEC Package XML file.
-        -outfile OUTFILE, -o OUTFILE
+        --outfile OUTFILE, -o OUTFILE
                               the name of the output STIX Package XML file.
-        -config_directory CONFIG_DIRECTORY, -c CONFIG_DIRECTORY
+        --config_directory CONFIG_DIRECTORY, -c CONFIG_DIRECTORY
                               the path to the directory housing the Indicator
                               extraction JSON configuration files.
         --wrap, -w            wrap the input MAEC Package file in a STIX Package.
