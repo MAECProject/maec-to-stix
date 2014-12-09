@@ -19,9 +19,9 @@ def write_stix_package(stix_package, output_file):
 def main():
     # Setup the argument parser
     parser = argparse.ArgumentParser(description="MAEC to STIX " + str(__version__))
-    parser.add_argument("-infile","-i", help="the name of the input MAEC Package XML file.")
-    parser.add_argument("-outfile","-o", help="the name of the output STIX Package XML file.")
-    parser.add_argument("-config_directory","-c", help="the path to the directory housing the Indicator extraction JSON configuration files.", default=None)
+    parser.add_argument("--infile","-i", help="the name of the input MAEC Package XML file.")
+    parser.add_argument("--outfile","-o", help="the name of the output STIX Package XML file.")
+    parser.add_argument("--config_directory","-c", help="the path to the directory housing the Indicator extraction JSON configuration files.", default=None)
     opts_group = parser.add_mutually_exclusive_group()
     opts_group.add_argument("--wrap", "-w", help="wrap the input MAEC Package file in a STIX Package.", action="store_true", default=False)
     opts_group.add_argument("--extract", "-e", help="attempt to extract indicators from the MAEC Package and output them in a new STIX Package.", action="store_true", default=False)
