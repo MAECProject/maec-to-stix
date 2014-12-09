@@ -9,15 +9,12 @@ from maec_to_stix.indicator_extractor import ConfigParser
 
 def write_stix_package(stix_package, output_file):
     """Write a STIX Package to an XML file."""
-    try:
-        stix_xml = stix_package.to_xml()
-        out_file = open(output_file, "w")
-        out_file.write("<?xml version='1.0' encoding='UTF-8'?>\n")
-        out_file.write(stix_xml)
-        out_file.flush()
-        out_file.close()
-    except Exception:
-        raise
+    stix_xml = stix_package.to_xml()
+    out_file = open(output_file, "w")
+    out_file.write("<?xml version='1.0' encoding='UTF-8'?>\n")
+    out_file.write(stix_xml)
+    out_file.flush()
+    out_file.close()
 
 def main():
     # Setup the argument parser
