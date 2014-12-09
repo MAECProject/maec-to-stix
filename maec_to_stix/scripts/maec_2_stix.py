@@ -1,20 +1,5 @@
-#***************************************************#
-#                                                   #
-#      MAEC -> STIX XML Converter Script            #
-#                                                   #
-# Copyright (c) 2014 - The MITRE Corporation        #
-#                                                   #
-#***************************************************#
-
-# BY USING THE MAEC TO STIX SCRIPT, YOU SIGNIFY YOUR ACCEPTANCE OF THE TERMS AND 
-# CONDITIONS OF USE.  IF YOU DO NOT AGREE TO THESE TERMS, DO NOT USE THE MAEC
-# TO STIX SCRIPT.
-
-# For more information, please refer to the LICENSE.txt file.
-
-# MAEC to STIX Converter Script
-# Copyright 2014, MITRE Corp
-# Updated 12/08/2014
+# Copyright (c) 2014, The MITRE Corporation. All rights reserved.
+# See LICENSE.txt for complete terms.
 
 import warnings
 import argparse
