@@ -43,39 +43,39 @@ class ConfigParser(object):
         print "\n[Configuration Parameters]"
         for key, value in self.config_dict.items():
             if isinstance(value, bool):
-                print str(" {0} : {1}").format(key,value)
+                print " {0} : {1}".format(key,value)
             elif isinstance(value, dict):
-                print str(" {0}").format(key)
+                print " {0}".format(key)
                 for embedded_key, embedded_value in value.items():
-                    print str("   {0} : {1}").format(embedded_key,embedded_value)
+                    print "   {0} : {1}".format(embedded_key,embedded_value)
             elif isinstance(value, list):
-                print str(" {0}").format(key)
+                print " {0}".format(key)
                 for embedded_value in value:
-                    print str("   {0}").format(embedded_value)
+                    print "   {0}".format(embedded_value)
         # Print the supported Actions
         print "\n[Supported Actions]"
         for action_name in sorted(self.supported_actions):
-            print str(" {0}").format(action_name)
+            print " {0}".format(action_name)
         # Print the supported Objects
         print "\n[Supported Objects]"
         for object_type in sorted(self.supported_objects):
             supported_fields = self.supported_objects[object_type]
-            print str(" {0}").format(object_type)
+            print " {0}".format(object_type)
             required = supported_fields["required"]
             mutually_exclusive_required = supported_fields["mutually_exclusive"]
             optional = supported_fields["optional"]
             if required:
                 print "   Required Fields"
                 for field in sorted(required):
-                    print  str("      {0}").format(field)
+                    print  "      {0}".format(field)
             if mutually_exclusive_required:
                 print "   Mutually Exclusive (Required) Fields"
                 for field in sorted(mutually_exclusive_required):
-                    print  str("      {0}").format(field)
+                    print "      {0}".format(field)
             if optional:
                 print "   Optional Fields"
                 for field in sorted(optional):
-                    print  str("      {0}").format(field)
+                    print "      {0}".format(field)
 
     def _parse_object_config_dict(self, object_type, config_dict):
         """Parse an Object configuration dictionary."""
