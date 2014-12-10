@@ -27,7 +27,7 @@ Also discussed is the copying over of the JSON indicator extraction configuratio
 files to a user specified directory.
 
 maec_wrap.py
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 Bundled with **maec-to-stix** is ``maec_wrap.py``, which is used for wrapping
 MAEC Package documents in STIX. It can be found on your ``PATH`` after
@@ -63,7 +63,7 @@ and output filename, respectively.
     $ maec_wrap.py maec_doc.xml stix_doc.xml
 
 maec_extract_indicators.py
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Also bundled with **maec-to-stix** is ``maec_extract_indicators.py``, which is
 used for extracting indicators from MAEC documents and outputting them in a STIX
@@ -113,7 +113,7 @@ For more information on the indicator extraction process itself, please refer to
 .. _copy-config:
 
 copy_maec_to_stix_config.py
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The other script bundled with **maec-to-stix** is ``copy_maec_to_stix_config.py``,
 which is simply intended to copy over the installed JSON indicator extraction
 configuration files to a user specified directory. For more information on the
