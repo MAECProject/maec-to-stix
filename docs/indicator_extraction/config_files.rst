@@ -89,9 +89,7 @@ API
 ~~~
 The **maec-to-stix** API supports passing in the path to the directory where the
 configuration files are stored through the **config_directory** parameter in 
-:meth:`maec_to_stix.extract_indicators`. **NOTE**: this assumes that the 
-granular configuration files are located in the same directory as the main 
-configuration file.
+:meth:`maec_to_stix.extract_indicators`.
 
 Example
 ^^^^^^^
