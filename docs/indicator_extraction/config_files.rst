@@ -60,29 +60,30 @@ By default, the configuration files are installed in the **maec-to-stix**
 installation directory in ``python/lib/site-packages``. However, instead of
 editing them in place there, we recommend copying them over to another directory
 and making any changes as needed to these copies. To that end, we've provided
-a script, ``copy_config.py``, that will copy all of the configuration files to
-a user-specified directory. For more information on this script, please refer to
-:ref:`copy-config`.
+a script, ``copy_maec_to_stix_config.py``, that will copy all of the configuration
+files to a user-specified directory. For more information on this script, please 
+refer to :ref:`copy-config`.
 
 Accordingly, in order to use any user-edited files, the utility needs to be told
 where to find them. Luckily, this is a very simple process, for both the 
-``maec_2_stix.py`` script, as well as the API.
+``maec_extract_indicators.py`` script, as well as the API.
 
-maec_2_stix.py
+maec_extract_indicators.py
 ~~~~~~~~~~~~~~
-``maec_2_stix.py`` includes a *-config_directory* (or *-c*) command-line parameter
-for specifying the directory where the configuration files are located. 
+``maec_extract_indicators.py`` includes a *-config_directory* (or *-c*)
+command-line parameter for specifying the directory where the configuration 
+files are located. 
 
 Example
 ^^^^^^^
 As an example, let's assume that we've edited the main configuration file
 and some of the granular configuration files and placed them in ``/usr/tmp``.
-The following command-line would force ``maec_2_stix.py`` to use these
-modified configuration files:
+The following command-line would force ``maec_extract_indicators.py`` to use
+these modified configuration files:
 
 .. code-block:: bash
 
-    $ maec_2_stix.py -config_file /usr/tmp --extract -infile maec_doc.xml -outfile stix_doc.xml
+    $ maec_extract_indicators.py -config_file /usr/tmp -infile maec_doc.xml -outfile stix_doc.xml
 
 API
 ~~~
