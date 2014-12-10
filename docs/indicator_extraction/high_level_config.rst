@@ -48,9 +48,9 @@ modifiers               List       ["move", "copy", "rename"]
 Description
 ~~~~~~~~~~~
 
-- ``use_granular_options``: whether to use the granular configuration file (**granular_config.json**) to drive the indicator extraction behavior, OR to use the abstracted system-level activity configuration files. Thus, a value of **true** indicates that the granular configuration will be used and the abstracted options will not; conversely, a value of **false** indicates that the abstractions will be used and the granular configuration file will not.
+- ``use_granular_options``: whether to use the granular configuration file (**granular_config.json**) to drive the indicator extraction behavior OR to use the abstracted system-level activity configuration files. Thus, a value of **true** indicates that the granular configuration will be used and the system-level configuration files will not; conversely, a value of **false** indicates that the system-level configuration files will be used and the granular configuration file will not.
 
-- ``normalize_objects``: whether or not the CybOX Objects used in the STIX Indicators should be normalized. For more information on what this entails, please see the Object Normalization section below.
+- ``normalize_objects``: whether the CybOX Objects used in the STIX Indicators should be normalized. For more information on what this entails, please refer to :ref:`object_normalization`.
 
 - ``abstracted_options``: the particular set of system-level activities to attempt to extract indicators for, and thus is only applicable if ``use_granular_options`` is set to **false**. The following keys are allowed in the dictionary that specifies the set of system-level activities:
 
@@ -62,13 +62,15 @@ Description
   - ``service_activity``: whether to attempt to extract indicators for service activity, such as service creation.
   - ``driver_activity``: whether to attempt to extract indicators for driver activity, such as driver creation.
   
-- ``contraindicators``: a list of terms to look for in MAEC Action names that indicate that an Object may no longer be present after the execution of the malware. Used in candidate Object filtering; for more information please refer to :ref:`contra-indicator`.
-- ``modifiers``: a list of terms to look for in MAEC Action names that indicate that the state of the Object may have been changed in some way that would render it undetectable. Primarily applicable to files and used in candidate Object filtering; for more information please refer to :ref:`contra-indicator`.
+- ``contraindicators``: a list of terms to look for in MAEC Action names that may indicate that an Object is no longer present after the execution of the malware. Used in candidate Object filtering; for more information please refer to :ref:`contra-indicator`.
+- ``modifiers``: a list of terms to look for in MAEC Action names that may indicate that the state of the Object has changed in some way that would render it undetectable. Primarily applicable to files and used in candidate Object filtering; for more information please refer to :ref:`contra-indicator`.
+
+.. _object_normalization:
 
 Object Normalization
 --------------------
 The underlying differences in the implementation, infrastructure, and environment of 
-dynamic anti-malware analysis tools (i.e. sandboxes) means that they all report
+dynamic anti-malware analysis tools (i.e. sandboxes) means that they report
 things slightly (or vastly, depending on the case) differently, even for the same
 malware sample. To help with this, when ``normalize_objects`` is set to **true**,
 **maec-to-stix** uses the Normalize_ module from python-cybox to normalize 
