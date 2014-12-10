@@ -69,7 +69,7 @@ where to find them. Luckily, this is a very simple process, for both the
 ``maec_extract_indicators.py`` script, as well as the API.
 
 maec_extract_indicators.py
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 ``maec_extract_indicators.py`` includes a *-config_directory* (or *-c*)
 command-line parameter for specifying the directory where the configuration 
 files are located. 
