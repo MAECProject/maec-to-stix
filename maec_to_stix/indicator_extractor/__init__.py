@@ -22,6 +22,12 @@ from stix.extensions.malware.maec_4_1_malware import MAECInstance
 from indicator_filter import IndicatorFilter
 from config_parser import ConfigParser
 
+class UnsupportedMAECEntityException(Exception):
+    """Basic exception for throwing when an unsupported MAEC document type
+    is encountered.
+    """
+    pass
+
 class IndicatorExtractor(object):
     """Used to extract STIX Indicators from a MAEC Package.
     
@@ -292,6 +298,10 @@ class IndicatorExtractor(object):
 
     def _parse_package(self):
         """Parse a MAEC Package for STIX Indicator extraction."""
+        # Check to make sure the input that was passed in is actually a MAEC Package
+        if not isinstance(self.maec_package, Package):
+            raise UnsupportedMAECEntityException("Unsupported MAEC Entity. Must be a MAEC Package (maec.package.package.Package instance).")
+
         if self.maec_package.malware_subjects:
             for malware_subject in self.maec_package.malware_subjects:
                 self._parse_malware_subject(malware_subject)
