@@ -11,19 +11,19 @@ There are multiple configuration files - a main configuration file, one each
 for the different types of system activity included by default, and one granular
 configuration file that contains the full list of MAEC Actions and CybOX Objects: 
 
-================================= ========================================== ===========================
- File                              Description                                   Reference
-================================= ========================================== ===========================
-extractor_config.json               The main configuration file.              :doc:`high_level_config`
-driver_activity_config.json         System activity configuration file.       :doc:`granular_config` 
-file_system_activity_config.json    System activity configuration file.       :doc:`granular_config`
-mutex_activity_config.json          System activity configuration file.       :doc:`granular_config`
-network_activity_config.json        System activity configuration file.       :doc:`granular_config`
-process_activity_config.json        System activity configuration file.       :doc:`granular_config`
-registry_activity_config.json       System activity configuration file.       :doc:`granular_config`
-service_activity_config.json        System activity configuration file.       :doc:`granular_config`
-granular_config.json                Full granular configuration file.         :doc:`granular_config`                 
-================================= ========================================== ===========================
+======================================= ========================================== ===========================
+ File                                        Description                                   Reference
+======================================= ========================================== ===========================
+extractor_config.json                    The main configuration file.              :doc:`high_level_config`
+:ref:`driver_activity_config.json`       System activity configuration file.       :doc:`granular_config` 
+:ref:`file_system_activity_config.json`  System activity configuration file.       :doc:`granular_config`
+:ref:`mutex_activity_config.json`        System activity configuration file.       :doc:`granular_config`
+:ref:`network_activity_config.json`      System activity configuration file.       :doc:`granular_config`
+:ref:`process_activity_config.json`      System activity configuration file.       :doc:`granular_config`
+:ref:`registry_activity_config.json`     System activity configuration file.       :doc:`granular_config`
+:ref:`service_activity_config.json`      System activity configuration file.       :doc:`granular_config`
+granular_config.json                     Full granular configuration file.         :doc:`granular_config`                 
+======================================= ========================================== ===========================
  
 Main Configuration File
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,9 +41,10 @@ Each of the system activity configuration files contains only the set of MAEC
 Actions and CybOX Objects that are relevant in the context of the particular type
 of system activity that it refers to. Note that not all of these Actions and CybOX
 Objects and their properties are enabled in each activity-level configuration file 
-by default; please see :doc:`granular_config_defaults` for the list of default 
-Actions and CybOX Objects in each. Thus, each of these files may be edited for more
-granular control of a particular system activity for which to extract indicators for.
+by default; please click on the file name above or refer to :doc:`granular_config_defaults`
+for the list of default Actions and CybOX Objects in each. Thus, each of these files 
+may be edited for more granular control of a particular system activity for which to
+extract indicators for.
 
 Full Granular Configuration File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
