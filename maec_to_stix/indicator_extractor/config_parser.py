@@ -98,7 +98,7 @@ class ConfigParser(object):
         try:
             # Load the default installed configuration file if no directory is specified
             if not self.config_directory:
-                config_filename = os.path.join(os.path.dirname(__file__) + "/config", granular_config_file)
+                config_filename = os.path.join(os.path.dirname(__file__) , "config", granular_config_file)
             # Otherwise, load the specified configuration file
             else:
                 config_filename = os.path.join(self.config_directory, granular_config_file)
@@ -123,7 +123,7 @@ class ConfigParser(object):
         try:
             # Load the default installed configuration file if no directory is specified
             if not self.config_directory:
-                config_filename = os.path.join(os.path.dirname(__file__) + "/config", "extractor_config.json")
+                config_filename = os.path.join(os.path.dirname(__file__), "config", "extractor_config.json")
             # Otherwise, load the specified configuration file
             else:
                 config_filename = os.path.join(self.config_directory, "extractor_config.json")
