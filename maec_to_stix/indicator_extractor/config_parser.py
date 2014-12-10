@@ -82,16 +82,18 @@ class ConfigParser(object):
         flattened_dict = ConfigParser.flatten_dict(config_dict)
         for key, config_options in flattened_dict.iteritems():
             if config_options["enabled"]:
+                whitelist = config_options.get('whitelist')
                 if object_type not in self.supported_objects:
                     self.supported_objects[object_type] = {"required":{}, "optional":{}, 
                                                            "mutually_exclusive":{}}
+                object_conf = self.supported_objects[object_type]
                 if config_options["required"]:
                     if "mutually_exclusive" in config_options and config_options["mutually_exclusive"]:
-                        self.supported_objects[object_type]["mutually_exclusive"][key] = config_options.get("whitelist", None)
+                        object_conf["mutually_exclusive"][key] = whitelist
                     else:
-                        self.supported_objects[object_type]["required"][key] = config_options.get("whitelist", None)
+                        object_conf["required"][key] = whitelist
                 else:
-                    self.supported_objects[object_type]["optional"][key] = config_options.get("whitelist", None)
+                    object_conf["optional"][key] = whitelist
 
     def _parse_granular_config(self, granular_config_file):
         """Parse a granular JSON configuration structure."""
