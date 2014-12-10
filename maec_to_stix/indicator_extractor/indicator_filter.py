@@ -56,7 +56,7 @@ class IndicatorFilter(object):
         """Prune any un-wanted properties from a single Object.
            Return a dictionary with only the allowed properties."""
         pruned_dict = {}
-        for property_name, property_value in object_dict.items():
+        for property_name, property_value in object_dict.iteritems():
             if parent_key:
                 updated_key = parent_key + "/" + property_name
             else:

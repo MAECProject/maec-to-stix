@@ -165,7 +165,7 @@ class IndicatorExtractor(object):
             property = {'value':property, 'condition':condition}
         elif isinstance(property, dict):
             if 'condition' not in property and 'required' not in property:
-                for key, value in property.items():
+                for key, value in property.iteritems():
                     property[key] = self._set_object_property(value, condition)
         elif isinstance(property, list):
             for item in property:
@@ -185,7 +185,7 @@ class IndicatorExtractor(object):
             object_xsi_type = object.properties._XSI_TYPE
             object_properties_dict = object.properties.to_dict()
             updated_properties_dict = {}
-            for property_name, property_value in object_properties_dict.items():
+            for property_name, property_value in object_properties_dict.iteritems():
                 updated_properties_dict[property_name] = self._set_object_property(property_value)
             updated_properties_dict['xsi:type'] = object_xsi_type
             object.properties = ObjectProperties.from_dict(updated_properties_dict)

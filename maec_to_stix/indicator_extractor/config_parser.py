@@ -41,12 +41,12 @@ class ConfigParser(object):
         """
         # Print the general parameters
         print "\n[Configuration Parameters]"
-        for key, value in self.config_dict.items():
+        for key, value in self.config_dict.iteritems():
             if isinstance(value, bool):
                 print " {0} : {1}".format(key,value)
             elif isinstance(value, dict):
                 print " {0}".format(key)
-                for embedded_key, embedded_value in value.items():
+                for embedded_key, embedded_value in value.iteritems():
                     print "   {0} : {1}".format(embedded_key,embedded_value)
             elif isinstance(value, list):
                 print " {0}".format(key)
@@ -80,7 +80,7 @@ class ConfigParser(object):
     def _parse_object_config_dict(self, object_type, config_dict):
         """Parse an Object configuration dictionary."""
         flattened_dict = ConfigParser.flatten_dict(config_dict)
-        for key, config_options in flattened_dict.items():
+        for key, config_options in flattened_dict.iteritems():
             if config_options["enabled"]:
                 if object_type not in self.supported_objects:
                     self.supported_objects[object_type] = {"required":{}, "optional":{}, 
@@ -107,13 +107,13 @@ class ConfigParser(object):
         except EnvironmentError:
             print "Error reading configuration file: " + granular_config_file
             raise
-        for config_type, config_values in config.items():
+        for config_type, config_values in config.iteritems():
             if config_type == "supported objects":
-                for object_type, properties_dict in config_values.items():
+                for object_type, properties_dict in config_values.iteritems():
                     self._parse_object_config_dict(object_type, properties_dict)
             elif config_type == "supported actions":
-                for enum_name, actions_dict in config_values.items():
-                    for action_name, enabled in actions_dict.items():
+                for enum_name, actions_dict in config_values.iteritems():
+                    for action_name, enabled in actions_dict.iteritems():
                         if enabled:
                             self.supported_actions.append(action_name)
 
@@ -137,7 +137,7 @@ class ConfigParser(object):
             self._parse_granular_config("granular_config.json")
         else:
             abstracted_options = self.config_dict["abstracted_options"]
-            for option, enabled in abstracted_options.items():
+            for option, enabled in abstracted_options.iteritems():
                 if option == "file_system_activity" and enabled:
                     self._parse_granular_config("file_system_activity_config.json")
                 elif option == "registry_activity" and enabled:
@@ -167,16 +167,16 @@ class ConfigParser(object):
             The flattened representation of the input dictionary.
         """
         items = []
-        for k, v in d.items():
+        for k, v in d.iteritems():
             new_key = parent_key + sep + k if parent_key else k
             if isinstance(v, collections.MutableMapping):
                 if "enabled" not in v and "required" not in v:
-                    items.extend(ConfigParser.flatten_dict(v, new_key, sep=sep).items())
+                    items.extend(ConfigParser.flatten_dict(v, new_key, sep=sep).iteritems())
                 else:
                     items.append((new_key, v))
             elif isinstance(v, list):
                 for list_item in v:
-                    items.extend(ConfigParser.flatten_dict(list_item, new_key, sep=sep).items())
+                    items.extend(ConfigParser.flatten_dict(list_item, new_key, sep=sep).iteritems())
             else:
                 items.append((new_key, v))
         return dict(items)
