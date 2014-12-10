@@ -142,14 +142,15 @@ class IndicatorFilter(object):
             xsi_type = object.properties._XSI_TYPE
             # Do the contraindicator check
             if xsi_type in self.config.supported_objects and not self._contraindicator_check(entry):
+                object_type_conf = self.config.supported_objects[xsi_type]
                 # Prune the properties of the Object to correspond to the input config file
                 # First, test for the presence of only the required properties
                 if self._required_property_check(object, self.config.supported_objects[xsi_type]):
                     # If the required properties are found, prune based on the full set (optional + required)
                     full_properties = {}
-                    full_properties.update(self.config.supported_objects[xsi_type]["required"])
-                    full_properties.update(self.config.supported_objects[xsi_type]["optional"])
-                    full_properties.update(self.config.supported_objects[xsi_type]["mutually_exclusive"])
+                    full_properties.update(object_type_conf["required"])
+                    full_properties.update(object_type_conf["optional"])
+                    full_properties.update(object_type_conf["mutually_exclusive"])
                     full_pruned_properties = self._prune_object_properties(object.properties.to_dict(), full_properties)
                     full_pruned_properties["xsi:type"] = xsi_type
                     # Create a new Object with the pruned ObjectProperties
