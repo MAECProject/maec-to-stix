@@ -166,17 +166,17 @@ class ConfigParser(object):
         Return:
             The flattened representation of the input dictionary.
         """
-        items = []
+        items = {}
         for k, v in d.iteritems():
             new_key = parent_key + sep + k if parent_key else k
-            if isinstance(v, collections.MutableMapping):
+            if isinstance(v, dict):
                 if "enabled" not in v and "required" not in v:
-                    items.extend(ConfigParser.flatten_dict(v, new_key, sep=sep).iteritems())
+                    items.update(ConfigParser.flatten_dict(v, new_key, sep=sep))
                 else:
-                    items.append((new_key, v))
+                    items[new_key] = v
             elif isinstance(v, list):
                 for list_item in v:
-                    items.extend(ConfigParser.flatten_dict(list_item, new_key, sep=sep).iteritems())
+                    items.update(ConfigParser.flatten_dict(list_item, new_key, sep=sep))
             else:
-                items.append((new_key, v))
-        return dict(items)
+                items[new_key] = v
+        return items
