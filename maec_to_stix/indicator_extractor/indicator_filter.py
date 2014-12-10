@@ -114,12 +114,12 @@ class IndicatorFilter(object):
         mutually_exclusive_properties = object_properties_dict["mutually_exclusive"]
         pruned_properties = self._prune_object_properties(object.properties.to_dict(), required_properties)
         # Check for the required properties
-        if len(ConfigParser.flatten_dict(pruned_properties).keys()) != len(required_properties.keys()):
+        if len(ConfigParser.flatten_dict(pruned_properties)) != len(required_properties):
             properties_found = False
         # Check for the mutually exclusive (required) properties
         if mutually_exclusive_properties:
             mutually_exclusive_pruned = self._prune_object_properties(object.properties.to_dict(), mutually_exclusive_properties)
-            if len(mutually_exclusive_pruned.keys()) != 1:
+            if len(mutually_exclusive_pruned) != 1:
                 properties_found = False
         return properties_found
 
