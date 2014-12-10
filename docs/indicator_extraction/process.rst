@@ -100,9 +100,20 @@ filtering process is to test whether it contains the required set of properties,
 as specified in the :doc:`granular_config`. For example, a file Object would not
 be very useful without a file path that states where it can be found, or more 
 generally an MD5 (or other) hash value. Thus, this logic checks for the existence
-of any required(or mutually exclusive required) properties that are defined
-for a particular Object type. For more information on how Object properties
-may be configured please refer to :ref:`object_parameters`.
+of any required (or mutually exclusive required) properties that are defined
+for a particular Object type. 
+
+Also checked here is whether the value of an Object property matches against
+any of the whitelist entries specified in the configuration parameters for the
+property. Such whitelist entries are intended to specify values that are 
+*whitelisted* from being searched for and therefore used in indicators. For example,
+internal IP addresses would be good candidates for additions to such a whitelist,
+as they would not make useful indicators. If an Object property value matches against
+a whitelist entry, the property will not be included in the corresponding Indicator. 
+If such a property is required (or mutually exclusive required), this means that its
+parent Object will be discarded and not used in a STIX Indicator. For more information
+on how Object properties may be configured, including the use of the whitelist, please
+refer to :ref:`object_parameters`.
 
 Extraneous Property Pruning
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
