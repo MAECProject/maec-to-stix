@@ -3,7 +3,7 @@
 
 import warnings
 import argparse
-from maec_to_stix import (__version__, wrap_maec_package, extract_indicators,
+from maec_to_stix import (__version__, extract_indicators,
                           _custom_formatwarning)
 from maec_to_stix.indicator_extractor import ConfigParser
 
@@ -18,32 +18,25 @@ def write_stix_package(stix_package, output_file):
 
 def main():
     # Setup the argument parser
-    parser = argparse.ArgumentParser(description="MAEC to STIX " + str(__version__))
-    parser.add_argument("--infile","-i", help="the name of the input MAEC Package XML file.")
+    parser = argparse.ArgumentParser(description="MAEC to STIX Indicator Extraction Script v" + str(__version__))
+    parser.add_argument("--infile","-i", help="the name of the input MAEC Package XML file to extract indicators from.")
     parser.add_argument("--outfile","-o", help="the name of the output STIX Package XML file.")
     parser.add_argument("--config_directory","-c", help="the path to the directory housing the Indicator extraction JSON configuration files.", default=None)
-    opts_group = parser.add_mutually_exclusive_group()
-    opts_group.add_argument("--wrap", "-w", help="wrap the input MAEC Package file in a STIX Package.", action="store_true", default=False)
-    opts_group.add_argument("--extract", "-e", help="attempt to extract indicators from the MAEC Package and output them in a new STIX Package.", action="store_true", default=False)
-    opts_group.add_argument("--print_options", "-p", help="print out the current set of indicator extraction options, including the supported Actions and Objects.", action="store_true", default=False)
+    parser.add_argument("--print_options", "-p", help="print out the current set of indicator extraction options, including the supported Actions and Objects.", action="store_true", default=False)
     args = parser.parse_args()
 
-    # Wrap the MAEC document in a STIX Package
-    if args.wrap:
-        stix_package = wrap_maec_package(args.infile)
-        write_stix_package(stix_package, args.outfile)
+    # Print the Indicator extraction configuration options
+    if args.print_options:
+        config_parser = ConfigParser(args.config_directory)
+        config_parser.print_config()
     # Attempt to extract Indicators from the MAEC document
-    elif args.extract:
+    elif args.infile and args.outfile:
         stix_package = extract_indicators(args.infile, args.config_directory)
         if stix_package:
             write_stix_package(stix_package, args.outfile)
         else:
             warnings.formatwarning = _custom_formatwarning
             warnings.warn("No STIX Package created.", UserWarning)
-    # Print the Indicator extraction configuration options
-    elif args.print_options:
-        config_parser = ConfigParser(args.config_directory)
-        config_parser.print_config()
     else:
         parser.print_usage()
 
