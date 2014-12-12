@@ -9,8 +9,7 @@ class ConfigParser(object):
     """Used to parse the JSON indicator extraction configuration files. 
 
     Attributes:
-        config_dict: the parsed dictionary representation of the main configuration
-            file.
+        config_dict: the parsed dictionary representation of the main configuration file.
         supported_actions: the list of supported Actions (names).
         supported_objects: a dictionary of supported Objects and their properties.
 
@@ -34,6 +33,7 @@ class ConfigParser(object):
         Note: 
             This method prints detailed information about the parsed Indicator
             extraction configuration, including:
+
                 1. The general Indicator extraction parameters (from config/extractor_config.json)
                 2. The supported Actions (derived from all of the parsed JSON configuration files)
                 3. The supported Objects and their properties (derived from all of the parsed JSON configuration files)
