@@ -77,19 +77,19 @@ Running :code:`maec_extract_indicators.py -h` displays the following:
 .. code-block:: bash
 
     $ maec_extract_indicators.py -h
-      usage: maec_extract_indicators.py [-h] [--infile INFILE] [--outfile OUTFILE]
-                                        [--config_directory CONFIG_DIRECTORY]
+      usage: maec_extract_indicators.py [-h] [--config_directory CONFIG_DIRECTORY]
                                         [--print_options]
+                                        infile outfile
 
       MAEC to STIX Indicator Extraction Script v1.0.0-alpha1
 
+      positional arguments:
+        infile                the name of the input MAEC Package XML file to extract
+                              indicators from.
+        outfile               the name of the output STIX Package XML file.
+
       optional arguments:
         -h, --help            show this help message and exit
-        --infile INFILE, -i INFILE
-                              the name of the input MAEC Package XML file to extract
-                              indicators from.
-        --outfile OUTFILE, -o OUTFILE
-                              the name of the output STIX Package XML file.
         --config_directory CONFIG_DIRECTORY, -c CONFIG_DIRECTORY
                               the path to the directory housing the Indicator
                               extraction JSON configuration files.
@@ -100,15 +100,14 @@ Basics
 ,,,,,,
 
 To extract STIX Indicators from a MAEC ``MAEC Package``, just provide the 
-the ``-infile`` and ``-outfile`` arguments which specify the input filename and
-output filename, respectively. Note that the behavior of this extraction is driven
-by a set of JSON configuration files, covered in :doc:`indicator_extraction/config`.
-For more information on the indicator extraction process itself, please refer to 
-:doc:`indicator_extraction/process`.
+input filename and output filename, respectively. Note that the behavior of this
+extraction is driven by a set of JSON configuration files, covered in
+:doc:`indicator_extraction/config`. For more information on the indicator
+extraction process itself, please refer to :doc:`indicator_extraction/process`.
 
 .. code-block:: bash
 
-    $ maec_extract_indicators.py -infile maec_doc.xml -outfile stix_doc.xml
+    $ maec_extract_indicators.py maec_doc.xml stix_doc.xml
 
 .. _copy-config:
 

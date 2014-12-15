@@ -71,7 +71,7 @@ where to find them. Luckily, this is a very simple process, for both the
 
 maec_extract_indicators.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-``maec_extract_indicators.py`` includes a *-config_directory* (or *-c*)
+``maec_extract_indicators.py`` includes a *--config_directory* (or *-c*)
 command-line parameter for specifying the directory where the configuration 
 files are located. 
 
@@ -84,7 +84,7 @@ these modified configuration files:
 
 .. code-block:: bash
 
-    $ maec_extract_indicators.py -config_file /usr/tmp -infile maec_doc.xml -outfile stix_doc.xml
+    $ maec_extract_indicators.py --config_directory /usr/tmp maec_doc.xml stix_doc.xml
 
 API
 ~~~
