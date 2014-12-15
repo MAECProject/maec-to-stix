@@ -84,7 +84,7 @@ these modified configuration files:
 
 .. code-block:: bash
 
-    $ maec_extract_indicators.py --config_directory /usr/tmp maec_doc.xml stix_doc.xml
+    $ maec_extract_indicators.py --config_directory /usr/tmp maec_doc.xml --outfile stix_doc.xml
 
 API
 ~~~
