@@ -20,7 +20,7 @@ def main():
         os.makedirs(args.outpath)
 
     # Get the path to the Indicator extraction configuration files
-    config_path = resource_filename("maec_to_stix", "indicator_extractor/config")
+    config_path = resource_filename("maec_to_stix", os.path.join("indicator_extractor", "config"))
 
     sys.stdout.write("Copying configuration files")
     for config_file in os.listdir(config_path):
