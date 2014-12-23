@@ -13,7 +13,7 @@ analysis tool (such as `Cuckoo Sandbox`_) and ending with inspection of the
 resulting STIX Indicators by a human analyst. More details on the actual process
 of extracting Indicators from MAEC is provided in the sections below. 
 
-.. figure:: images\maec_to_stix_process.png
+.. figure:: images/maec_to_stix_process.png
    :scale: 60 %
    :alt: MAEC to STIX High-level Process
 
