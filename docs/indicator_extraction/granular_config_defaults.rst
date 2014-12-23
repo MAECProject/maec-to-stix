@@ -6,6 +6,8 @@ granular system activity indicator extraction configuration files. For more
 information on what these settings mean, please refer to the :doc:`granular_config`
 documentation.
 
+.. _driver_activity_config.json:
+
 driver_activity_config.json
 ---------------------------
 **Supported Actions**
@@ -26,6 +28,8 @@ driver_activity_config.json
       
     - file_name
 	
+.. _file_system_activity_config.json:
+
 file_system_activity_config.json
 --------------------------------
 **Supported Actions**
@@ -121,6 +125,8 @@ file_system_activity_config.json
     - file_name
     - hashes/hash/simple_hash_value
     - hashes/hash/type
+
+.. _mutex_activity_config.json:
 	
 mutex_activity_config.json
 --------------------------
@@ -141,6 +147,8 @@ mutex_activity_config.json
   - *Required Fields*
   
     - name
+
+.. _network_activity_config.json:
 	
 network_activity_config.json
 ----------------------------
@@ -241,6 +249,8 @@ network_activity_config.json
   - *Required Fields*
   
     - value
+
+.. _process_activity_config.json:
 	
 process_activity_config.json
 ----------------------------
@@ -284,6 +294,8 @@ process_activity_config.json
     - image_info/file_name
     - name
 
+.. _registry_activity_config.json:
+	
 registry_activity_config.json
 -----------------------------
 **Supported Actions**
@@ -294,6 +306,7 @@ registry_activity_config.json
 - modify registry key value
 
 **Supported Objects**
+
 - WindowsRegistryKeyObjectType
 
   - *Required Fields*
@@ -305,6 +318,8 @@ registry_activity_config.json
 
     - values/value/data
     - values/value/name
+
+.. _service_activity_config.json:
 
 service_activity_config.json
 ----------------------------

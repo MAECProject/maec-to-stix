@@ -22,6 +22,12 @@ from stix.extensions.malware.maec_4_1_malware import MAECInstance
 from indicator_filter import IndicatorFilter
 from config_parser import ConfigParser
 
+class UnsupportedMAECEntityException(Exception):
+    """Basic exception for throwing when an unsupported MAEC document type
+    is encountered.
+    """
+    pass
+
 class IndicatorExtractor(object):
     """Used to extract STIX Indicators from a MAEC Package.
     
@@ -165,7 +171,7 @@ class IndicatorExtractor(object):
             property = {'value':property, 'condition':condition}
         elif isinstance(property, dict):
             if 'condition' not in property and 'required' not in property:
-                for key, value in property.items():
+                for key, value in property.iteritems():
                     property[key] = self._set_object_property(value, condition)
         elif isinstance(property, list):
             for item in property:
@@ -185,7 +191,7 @@ class IndicatorExtractor(object):
             object_xsi_type = object.properties._XSI_TYPE
             object_properties_dict = object.properties.to_dict()
             updated_properties_dict = {}
-            for property_name, property_value in object_properties_dict.items():
+            for property_name, property_value in object_properties_dict.iteritems():
                 updated_properties_dict[property_name] = self._set_object_property(property_value)
             updated_properties_dict['xsi:type'] = object_xsi_type
             object.properties = ObjectProperties.from_dict(updated_properties_dict)
@@ -292,6 +298,10 @@ class IndicatorExtractor(object):
 
     def _parse_package(self):
         """Parse a MAEC Package for STIX Indicator extraction."""
+        # Check to make sure the input that was passed in is actually a MAEC Package
+        if not isinstance(self.maec_package, Package):
+            raise UnsupportedMAECEntityException("Unsupported MAEC Entity. Must be a MAEC Package (maec.package.package.Package instance).")
+
         if self.maec_package.malware_subjects:
             for malware_subject in self.maec_package.malware_subjects:
                 self._parse_malware_subject(malware_subject)

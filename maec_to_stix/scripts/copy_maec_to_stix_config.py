@@ -10,8 +10,8 @@ from pkg_resources import resource_filename
 
 def main():
     # Setup the argument parser
-    parser = argparse.ArgumentParser(description="MAEC to STIX configuration copying script")
-    parser.add_argument("outpath", help="""the output directory into which to copy the MAEC to STIX Indicator extraction configuration files. 
+    parser = argparse.ArgumentParser(description="MAEC to STIX indicator extraction configuration copying script")
+    parser.add_argument("outpath", help="""the output directory into which the MAEC to STIX Indicator extraction configuration files will be copied. 
                                            If the directory does not already exist, it will be created by the script.""")
     args = parser.parse_args()
 
@@ -20,7 +20,7 @@ def main():
         os.makedirs(args.outpath)
 
     # Get the path to the Indicator extraction configuration files
-    config_path = resource_filename("maec_to_stix", "indicator_extractor/config")
+    config_path = resource_filename("maec_to_stix", os.path.join("indicator_extractor", "config"))
 
     sys.stdout.write("Copying configuration files")
     for config_file in os.listdir(config_path):

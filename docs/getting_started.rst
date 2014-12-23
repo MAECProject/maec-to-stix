@@ -26,92 +26,103 @@ Indicators from MAEC content using the scripts bundled with **maec-to-stix**.
 Also discussed is the copying over of the JSON indicator extraction configuration
 files to a user specified directory.
 
-maec_2_stix.py
-~~~~~~~~~~~~~~
+maec_wrap.py
+~~~~~~~~~~~~
 
-The main script bundled with **maec-to-stix** is ``maec_2_stix.py``, which can be
-found on your ``PATH`` after installing **maec-to-stix**.
+Bundled with **maec-to-stix** is ``maec_wrap.py``, which is used for wrapping
+MAEC Package documents in STIX. It can be found on your ``PATH`` after
+installing **maec-to-stix**.
 
 Options
 ^^^^^^^
 
-Running :code:`maec_2_stix.py -h` displays the following:
+Running :code:`maec_wrap.py -h` displays the following:
 
 .. code-block:: bash
 
-    $ maec_to_stix.py -h
-      usage: maec_2_stix.py [-h] [-infile INFILE] [-outfile OUTFILE]
-                            [-config_file CONFIG_FILE]
-                            [--wrap | --extract | --print_options]
+    $ maec_wrap.py -h
+      usage: maec_wrap.py [-h] [--outfile OUTFILE] infile
 
-      MAEC to STIX 1.0.0-alpha1
+      MAEC to STIX Wrapper Script v1.0.0-alpha1
+
+      positional arguments:
+        infile                the name of the input MAEC Package XML file to wrap in
+                              STIX.
 
       optional arguments:
         -h, --help            show this help message and exit
-        -infile INFILE, -i INFILE
-                              the name of the input MAEC Package XML file.
-        -outfile OUTFILE, -o OUTFILE
-                              the name of the output STIX Package XML file.
-        -config_directory CONFIG_DIRECTORY, -c CONFIG_DIRECTORY
-                              the path to the directory housing the Indicator
-                              extraction JSON configuration files.
-        --wrap, -w            wrap the input MAEC Package file in a STIX Package.
-        --extract, -e         attempt to extract indicators from the MAEC Package
-                              and output them in a new STIX Package.
-        --print_options, -p   print out the current set of indicator extraction
-                              options, including the supported Actions and Objects.
-
-Flags
-^^^^^
-
-The ``maec_2_stix.py`` script accepts a MAEC ``MAEC Package`` or
-document as input. However, what it does with this document is determined
-by the particular flag that is provided, either ``--wrap`` or ``--extract``.
-We discuss the corresponding behavior of both flags and their usage below.
-
-Wrapping MAEC Content in STIX
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-In this section, we'll discuss the usage of the ``--wrap`` flag for
-wrapping MAEC content in a STIX ``STIX Package``.
+        --outfile OUTFILE, -o OUTFILE
+                              the name of the output STIX Package XML file. If not
+                              specified, defaults to sys.stdout.
 
 Basics
 ,,,,,,
 
-To wrap the MAEC Package in STIX, just provide the ``--wrap`` flag, along with the 
-``-infile`` and ``-outfile`` arguments which specify the input filename 
-and output filename, respectively. 
+To wrap a MAEC Package in STIX, just provide the input filename 
+and optionally the output filename, respectively. If no output filename is
+specified, the script will print the output STIX Package to ``sys.stdout``.
 
 .. code-block:: bash
 
-    $ maec_to_stix.py --wrap -infile maec_doc.xml -outfile stix_doc.xml
+    $ maec_wrap.py maec_doc.xml --outfile stix_doc.xml
 
-Extracting STIX Indicators from MAEC
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+maec_extract_indicators.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In this section, we'll discuss the usage of the ``--extract`` flag for
-extracting STIX Indicators from a MAEC ``MAEC Package``.
+Also bundled with **maec-to-stix** is ``maec_extract_indicators.py``, which is
+used for extracting indicators from MAEC documents and outputting them in a STIX
+Package. It can likewise be found on your ``PATH`` after installing **maec-to-stix**.
+
+Options
+^^^^^^^
+
+Running :code:`maec_extract_indicators.py -h` displays the following:
+
+.. code-block:: bash
+
+    $ maec_extract_indicators.py -h
+      usage: maec_extract_indicators.py [-h] [--outfile OUTFILE]
+                                        [--config_directory CONFIG_DIRECTORY]
+                                        [--print_options]
+                                        infile
+
+      MAEC to STIX Indicator Extraction Script v1.0.0-alpha1
+
+      positional arguments:
+        infile                the name of the input MAEC Package XML file to extract
+                              indicators from.
+
+      optional arguments:
+        -h, --help            show this help message and exit
+        --outfile OUTFILE, -o OUTFILE
+                              the name of the output STIX Package XML file. If not
+                              specified, defaults to sys.stdout.
+        --config_directory CONFIG_DIRECTORY, -c CONFIG_DIRECTORY
+                              the path to the directory housing the Indicator
+                              extraction JSON configuration files.
+        --print_options, -p   print out the current set of indicator extraction
+                              options, including the supported Actions and Objects.
 
 Basics
 ,,,,,,
 
 To extract STIX Indicators from a MAEC ``MAEC Package``, just provide the 
-``--extract`` flag, along with the ``-infile`` and ``-outfile`` arguments which
-specify the input filename and output filename, respectively. Note that the 
-behavior of this extraction is driven by a set of JSON configuration files,
-covered in :doc:`indicator_extraction/config`. For more information on the
-indicator extraction process itself, please refer to 
+input filename and optionally the output filename, respectively. If no output
+filename is specified, the script will print the output STIX Package to
+``sys.stdout``. Note that the behavior of the Indicator extraction is driven
+by a set of JSON configuration files, covered in :doc:`indicator_extraction/config`.
+For more information on the indicator extraction process itself, please refer to
 :doc:`indicator_extraction/process`.
 
 .. code-block:: bash
 
-    $ maec_to_stix.py --extract -infile maec_doc.xml -outfile stix_doc.xml
+    $ maec_extract_indicators.py maec_doc.xml --outfile stix_doc.xml
 
 .. _copy-config:
 
-copy_config.py
-~~~~~~~~~~~~~~
-The other script bundled with **maec-to-stix** is ``copy_config.py``,
+copy_maec_to_stix_config.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The other script bundled with **maec-to-stix** is ``copy_maec_to_stix_config.py``,
 which is simply intended to copy over the installed JSON indicator extraction
 configuration files to a user specified directory. For more information on the
 indicator extraction configuration files, please refer to 
@@ -120,19 +131,19 @@ indicator extraction configuration files, please refer to
 Options
 ^^^^^^^
 
-Running :code:`copy_config.py -h` displays the following:
+Running :code:`copy_maec_to_stix_config.py -h` displays the following:
 
 .. code-block:: bash
 
     $ maec_to_stix.py -h
-      usage: copy_config.py [-h] outpath
+      usage: copy_maec_to_stix_config.py [-h] outpath
 
       MAEC to STIX configuration copying script
 
       positional arguments:
-        outpath     the output directory into which to copy the MAEC to STIX
-                    Indicator extraction configuration files. If the directory does
-                    not already exist, it will be created by the script.
+        outpath     the output directory into which the MAEC to STIX Indicator
+                    extraction configuration files will be copied. If the directory
+                    does not already exist, it will be created by the script.
 
       optional arguments:
         -h, --help  show this help message and exit
@@ -146,5 +157,4 @@ script.
 
 .. code-block:: bash
 
-    $ copy_config.py "temp\json_config"
-		
+    $ copy_maec_to_stix_config.py "temp\json_config"

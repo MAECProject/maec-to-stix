@@ -30,9 +30,10 @@ Action Configuration Parameters
 All entries from each respective MAEC Action vocabulary are included inside of the 
 "supported actions" section of the configuration file for the sake of completeness 
 and ease-of-use. As such, not all are supported by default, but can be configured
-by use of a value of **true** (indicating that it is supported) or **false** 
-(indicating that it is not supported). Thus, the syntax for Action vocabulary entry 
-configuration entries is simply:
+by use of a value of **true** (indicating that it is supported for use in indicator
+extraction) or **false** (indicating that it is not supported for use in indicator
+extraction). Thus, the syntax for Action vocabulary entry configuration entries is
+simply:
 
 ::
 
@@ -87,7 +88,10 @@ Where *<object type>* refers to the root type of a CybOX Object (e.g.
 ``FileObjectType``) and "<object property name>" refers to the name of
 a property (field) of the CybOX Object (e.g. ``File_Path``).
   
-Accordingly, the following parameters may be specified for each Object property.
+Listing
+~~~~~~~
+  
+The following parameters may be specified for each Object property.
 
 ===================== ============ ============= ========================
        Name               Type        Default      Example
@@ -101,11 +105,11 @@ whitelist               List          n/a        ["^10\\.([0-9]\\.?)+$"]
 Description
 ~~~~~~~~~~~
 
-- ``enabled``: whether or not the property should be extracted and used in the STIX Indicator. A value of **true** indicates that the property should be extracted, while a value of **false** indicates that it should not be. Thus, all other parameters are valid only in conjunction with this parameter being set to **true**.
+- ``enabled``: whether or not the property should be extracted and used in the STIX Indicator. A value of **true** indicates that the property should be extracted, while a value of **false** indicates that it should not be. Thus, all other parameters are valid only in conjunction with this parameter being set to **true**. Note that unless a CybOX Object has *at least one* property marked as ``enabled``, it will simply be ignored and will not be used in any STIX Indicators.
 
 - ``required``: whether the property MUST be found on the Object in order for the Object to be included in the STIX Indicator. Only valid if ``enabled`` is set to **true**. A value of **true** indicates that the property MUST be found on the Object, whereas a value of **false** indicates that the property is optional and therefore will be included if found on the Object. Note that if multiple values are marked as ``required``, ALL must be found on the Object in order for it to be used in the STIX Indicator.
 
-- ``mutually_exclusive`` (optional): whether the property is mutually exclusive with respect to other properties marked as such. This is intended to be used in cases where certain required properties are mutually exclusive with each other on an Object; thus, declaring such properties entails that an Object will used in the STIX Indicator only if one of these properties is found. Only valid if ``enabled`` is set to **true** AND also ``required`` is set to **true**. A value of **true** indicates that the property is mutually exclusive with regards to other properties marked as such, and therefore only one of these properties must be found on the Object in order for it to be used in the STIX Indicator. A value of **false** indicates that the property functions as any other non-mutually exclusive required property. 
+- ``mutually_exclusive`` (optional): whether the property is mutually exclusive with respect to other properties marked as such. This is intended to be used in cases where certain required properties are mutually exclusive with each other on an Object; thus, declaring such properties entails that an Object will used in the STIX Indicator only if one of these properties is found. Only valid if ``enabled`` is set to **true** AND ``required`` is set to **true**. A value of **true** indicates that the property is mutually exclusive with regards to other properties marked as such, and therefore only one of these properties must be found on the Object in order for it to be used in the STIX Indicator. A value of **false** indicates that the property functions as any other non-mutually exclusive required property. 
 
 - ``whitelist`` (optional): a list of Python-compatible regular expressions that signify patterns of values on the property that should be ignored and thus excluded from use in the STIX Indicator. Accordingly, this means that if an Object has a property marked as ``required`` and the value of this property matches against one or more of these regular expressions, the Object will be completely excluded from the STIX Indicator output.
   

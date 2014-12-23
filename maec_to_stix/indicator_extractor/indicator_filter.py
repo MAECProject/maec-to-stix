@@ -56,7 +56,7 @@ class IndicatorFilter(object):
         """Prune any un-wanted properties from a single Object.
            Return a dictionary with only the allowed properties."""
         pruned_dict = {}
-        for property_name, property_value in object_dict.items():
+        for property_name, property_value in object_dict.iteritems():
             if parent_key:
                 updated_key = parent_key + "/" + property_name
             else:
@@ -114,12 +114,12 @@ class IndicatorFilter(object):
         mutually_exclusive_properties = object_properties_dict["mutually_exclusive"]
         pruned_properties = self._prune_object_properties(object.properties.to_dict(), required_properties)
         # Check for the required properties
-        if len(ConfigParser.flatten_dict(pruned_properties).keys()) != len(required_properties.keys()):
+        if len(ConfigParser.flatten_dict(pruned_properties)) != len(required_properties):
             properties_found = False
         # Check for the mutually exclusive (required) properties
         if mutually_exclusive_properties:
             mutually_exclusive_pruned = self._prune_object_properties(object.properties.to_dict(), mutually_exclusive_properties)
-            if len(mutually_exclusive_pruned.keys()) != 1:
+            if len(mutually_exclusive_pruned) != 1:
                 properties_found = False
         return properties_found
 
@@ -142,14 +142,15 @@ class IndicatorFilter(object):
             xsi_type = object.properties._XSI_TYPE
             # Do the contraindicator check
             if xsi_type in self.config.supported_objects and not self._contraindicator_check(entry):
+                object_type_conf = self.config.supported_objects[xsi_type]
                 # Prune the properties of the Object to correspond to the input config file
                 # First, test for the presence of only the required properties
                 if self._required_property_check(object, self.config.supported_objects[xsi_type]):
                     # If the required properties are found, prune based on the full set (optional + required)
                     full_properties = {}
-                    full_properties.update(self.config.supported_objects[xsi_type]["required"])
-                    full_properties.update(self.config.supported_objects[xsi_type]["optional"])
-                    full_properties.update(self.config.supported_objects[xsi_type]["mutually_exclusive"])
+                    full_properties.update(object_type_conf["required"])
+                    full_properties.update(object_type_conf["optional"])
+                    full_properties.update(object_type_conf["mutually_exclusive"])
                     full_pruned_properties = self._prune_object_properties(object.properties.to_dict(), full_properties)
                     full_pruned_properties["xsi:type"] = xsi_type
                     # Create a new Object with the pruned ObjectProperties
