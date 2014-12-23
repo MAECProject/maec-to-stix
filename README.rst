@@ -18,7 +18,7 @@ in MAEC. It is compatible with the latest versions of MAEC and STIX,
 Installation
 ------------
 
-Use pip to install or upgrade stix-ramrod:
+Use pip to install or upgrade maec-to-stix:
 
 ::
 
@@ -48,11 +48,11 @@ Read the `Getting Started guide
 Layout
 ------
 
-The stix-ramrod repository has the following layout:
+The maec-to-stix repository has the following layout:
 
 * ``docs/`` - Used to build the `documentation
   <http://maec-to-stix.readthedocs.org>`_.
-* ``maec_to_stix/`` - The main stix-ramrod source.
+* ``maec_to_stix/`` - The main maec-to-stix source.
 * ``examples/`` - Examples of maec-to-stix usage.
 
 
