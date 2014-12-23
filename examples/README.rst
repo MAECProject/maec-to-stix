@@ -15,7 +15,7 @@ command:
 
 .. code-block:: bash
 
-    $ maec_2_stix.py -w -i maec_package_example.xml -o stix_maec_indicators.xml
+    $ maec_wrap.py maec_package_example.xml -o stix_maec_wrapped.xml
 
 stix_maec_indicators.xml
 ------------------------
@@ -26,5 +26,5 @@ The ``stix_maec_indicators.xml`` file is a STIX Package that demonstrates how
 
 .. code-block:: bash
 
-    $ maec_2_stix.py -e -i maec_package_example.xml -o stix_maec_indicators.xml
+    $ maec_extract_indicators.py maec_package_example.xml -o stix_maec_indicators.xml
 	
