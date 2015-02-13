@@ -2,7 +2,7 @@
 
 #
 # stix-ramrod documentation build configuration file, created by
-# sphinx-quickstart on Tue Sep 30 14:08:10 2014.
+# sphinx-quickstart on Tue Sep 30 14:08:10 2015.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.

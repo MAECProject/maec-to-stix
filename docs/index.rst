@@ -1,5 +1,5 @@
 .. maec-to-stix documentation master file, created by
-   sphinx-quickstart on Mon Nov 24 14:08:10 2014.
+   sphinx-quickstart on Mon Nov 24 14:08:10 2015.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
