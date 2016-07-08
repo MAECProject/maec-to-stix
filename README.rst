@@ -1,7 +1,7 @@
 maec-to-stix
 ===========
 
-A Python library for extracting STIX Indicators from MAEC data, and also wrapping MAEC data in STIX.
+A Python library for extracting `Structured Threat Information Expression (STIX™) <https://stixproject.github.io/>`_ Indicators from Malware Attribute Enumeration and Characterization (MAEC™) data, and also wrapping MAEC data in STIX.
 
 :Source: https://github.com/MAECProject/maec-to-stix
 :Documentation: http://maec-to-stix.readthedocs.org
@@ -66,10 +66,8 @@ follow `semantic versioning <http://semver.org/>`_ guidelines.
 Feedback
 --------
 
-You are encouraged to provide feedback by commenting on open issues or signing
-up for the `MAEC discussion list
-<http://maec.mitre.org/community/registration.html>`_ and posting your
-questions.
+Bug reports and feature requests are welcome and encouraged. Feel free to use the issue tracker on GitHub, join the `MAEC Community Email Discussion List
+<http://maec.mitre.org/community/registration.html>`_ , or send an email directly to maec@mitre.org.
 
 
 Terms
