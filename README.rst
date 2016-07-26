@@ -18,9 +18,7 @@ in MAEC. It is compatible with the latest versions of MAEC and STIX,
 Installation
 ------------
 
-Use pip to install or upgrade maec-to-stix:
-
-::
+Use pip to install or upgrade maec-to-stix::
 
     $ pip install maec-to-stix [--pre] [--upgrade]
 
