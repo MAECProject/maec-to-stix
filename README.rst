@@ -6,6 +6,15 @@ A Python library for extracting `Structured Threat Information Expression (STIXâ
 :Source: https://github.com/MAECProject/maec-to-stix
 :Documentation: http://maec-to-stix.readthedocs.org
 :Information: http://maecproject.github.io
+:Download: https://pypi.python.org/pypi/maec-to-stix/
+
+|version badge| |downloads badge|
+
+.. |Version Badge| image:: https://img.shields.io/pypi/v/maec-to-stix.svg?maxAge=3600
+   :target: https://pypi.python.org/pypi/maec/
+.. |Downloads Badge| image:: https://img.shields.io/pypi/dm/maec-to-stix.svg?maxAge=3600
+   :target: https://pypi.python.org/pypi/maec/
+
 
 Overview
 --------
