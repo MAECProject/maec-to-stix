@@ -41,7 +41,7 @@ setup(
              'maec_to_stix/scripts/copy_maec_to_stix_config.py'],
     include_package_data=True,
     package_data={'maec_to_stix': ['indicator_extractor/config/*.json']},
-    install_requires=['maec>=4.1.0.10,<4.1.1.13', 'cybox>=2.1.0.9,<2.1.0.13', 'stix>=1.1.1.3,<1.2.0.0'],
+    install_requires=['maec>=4.1.0.10,<4.1.0.13', 'cybox>=2.1.0.9,<2.1.0.13', 'stix>=1.1.1.3,<1.2.0.0'],
     extras_require=extras_require,
     classifiers=[
         "Programming Language :: Python",
